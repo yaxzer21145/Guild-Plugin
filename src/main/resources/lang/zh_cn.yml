@@ -1,0 +1,18 @@
+plugin:
+  enabling: 正在启用 Guild
+  enabled: Guild 插件已启用!
+  disabling: 正在禁用 Guild
+  disabled: Guild 插件已禁用!
+  author: 作者: GuildPlugin
+  version: v1.9.0
+
+guild:
+  created: 公会创建成功
+  deleted: 公会删除成功
+  joined: 你已加入公会
+  left: 你已离开公会
+  already_in_guild: 你已经在公会中了
+  not_in_guild: 你不在任何公会中
+  no_permission: 你没有权限
+  guild_not_found: 公会不存在
+  player_not_found: 玩家不存在

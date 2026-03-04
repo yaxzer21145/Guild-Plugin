@@ -1,0 +1,52 @@
+# GuildPlugin 配置文件
+
+# 语言设置
+language: zh_cn
+
+# 公会设置
+guild:
+  # 最大公会等级
+  max-level: 100
+  # 每级增加的成员数量
+  members-per-level: 5
+  # 默认公会标签颜色
+  default-tag-color: "&f"
+  # 公会名称最小长度
+  min-name-length: 3
+  # 公会名称最大长度
+  max-name-length: 16
+  # 公会标签最大长度
+  max-tag-length: 4
+  # 创建公会所需经验
+  create-cost: 0
+  # 解散公会冷却时间(秒)
+  disband-cooldown: 86400
+
+# 经验设置
+experience:
+  # 击杀怪物获得的经验
+  monster-kill: 10
+  # 挖掘方块获得的经验
+  block-break: 5
+  # 放置方块获得的经验
+  block-place: 3
+  # 玩家击杀获得的经验
+  player-kill: 50
+
+# 数据库设置
+database:
+  type: sqlite
+  host: localhost
+  port: 3306
+  database: guild
+  username: root
+  password: ""
+
+# 消息设置
+messages:
+  prefix: "&6[公会] &f"
+  no-permission: "&c你没有权限执行此操作"
+  not-in-guild: "&c你不在任何公会中"
+  player-not-found: "&c未找到玩家"
+  guild-not-found: "&c未找到公会"
+  invalid-arguments: "&c参数错误，使用 /guild help 查看帮助"

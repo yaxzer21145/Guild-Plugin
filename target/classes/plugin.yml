@@ -1,0 +1,31 @@
+name: Guild
+version: 2.0.0
+main: com.guild.GuildPlugin
+author: ya_xzer21145
+description: 一个功能完善的公会插件，支持1.8.8至1.21.1所有版本，兼容Spigot、Paper等服务端核心
+
+commands:
+  guild:
+    description: 公会主指令
+    aliases: [gh]
+    usage: /guild <子指令>
+  guildchat:
+    description: 公会聊天
+    aliases: [guildc, gc]
+    usage: /guildchat <消息>
+  guildgui:
+    description: 打开公会GUI界面
+    usage: /guildgui
+
+permissions:
+  guild.*:
+    description: 所有公会权限
+    children:
+      guild.admin: true
+      guild.player: true
+  guild.admin:
+    description: 公会管理员权限
+    default: op
+  guild.player:
+    description: 公会玩家权限
+    default: true

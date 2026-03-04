@@ -1,0 +1,18 @@
+plugin:
+  enabling: Enabling Guild
+  enabled: GuildPlugin has been enabled!
+  disabling: Disabling Guild
+  disabled: GuildPlugin has been disabled!
+  author: By GuildPlugin
+  version: v1.7.0
+
+guild:
+  created: Guild created successfully
+  deleted: Guild deleted successfully
+  joined: You have joined the guild
+  left: You have left the guild
+  already_in_guild: You are already in a guild
+  not_in_guild: You are not in a guild
+  no_permission: You do not have permission
+  guild_not_found: Guild not found
+  player_not_found: Player not found

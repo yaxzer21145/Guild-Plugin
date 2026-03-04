@@ -1,0 +1,18 @@
+plugin:
+  enabling: Activation de Guild
+  enabled: Le plugin Guild a été activé!
+  disabling: Désactivation de Guild
+  disabled: Le plugin Guild a été désactivé!
+  author: Par GuildPlugin
+  version: v1.7.0
+
+guild:
+  created: Guilde créée avec succès
+  deleted: Guilde supprimée avec succès
+  joined: Vous avez rejoint la guilde
+  left: Vous avez quitté la guilde
+  already_in_guild: Vous êtes déjà dans une guilde
+  not_in_guild: Vous n'êtes dans aucune guilde
+  no_permission: Vous n'avez pas la permission
+  guild_not_found: Guilde non trouvée
+  player_not_found: Joueur non trouvé

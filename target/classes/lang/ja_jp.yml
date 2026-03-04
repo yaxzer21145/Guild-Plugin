@@ -1,0 +1,18 @@
+plugin:
+  enabling: Guildを有効化中
+  enabled: Guildプラグインが有効化されました!
+  disabling: Guildを無効化中
+  disabled: Guildプラグインが無効化されました!
+  author: 作成者: GuildPlugin
+  version: v1.7.0
+
+guild:
+  created: ギルドが正常に作成されました
+  deleted: ギルドが正常に削除されました
+  joined: ギルドに参加しました
+  left: ギルドを脱退しました
+  already_in_guild: 既にギルドに参加しています
+  not_in_guild: ギルドに参加していません
+  no_permission: 権限がありません
+  guild_not_found: ギルドが見つかりません
+  player_not_found: プレイヤーが見つかりません

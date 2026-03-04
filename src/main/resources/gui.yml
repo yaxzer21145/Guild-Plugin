@@ -1,0 +1,119 @@
+# Guild插件GUI配置文件
+
+# GUI设置
+gui:
+  # GUI标题
+  title:
+    main: "&6公会系统"
+    no_guild: "&6公会系统"
+    all_guilds: "&6所有公会"
+    member: "&6公会: &e{name}"
+    officer: "&6公会管理: &e{name}"
+    owner: "&6公会会长: &e{name}"
+  
+  # GUI大小 (9的倍数: 9, 18, 27, 36, 45, 54)
+  size:
+    main: 54
+    all_guilds: 54
+  
+  # 物品设置
+  items:
+    # 无公会界面
+    no_guild:
+      barrier:
+        material: BARRIER
+        name: "&c你还没有公会"
+        lore:
+          - "&7创建或加入一个公会来开始"
+      create:
+        material: DIAMOND
+        name: "&a创建公会"
+        lore:
+          - "&7点击创建一个新的公会"
+      view_all:
+        material: BOOK
+        name: "&e查看所有公会"
+        lore:
+          - "&7点击查看服务器上的所有公会"
+    
+    # 所有公会界面
+    all_guilds:
+      guild_item:
+        material: DIAMOND_BLOCK
+        lore:
+          - "&7等级: &e{level}"
+          - "&7成员: &e{members}/{max}"
+          - "&7经验: &e{exp}"
+          - "&7标签: &e{tag}"
+      back:
+        material: ARROW
+        name: "&c返回"
+        lore:
+          - "&7返回主菜单"
+    
+    # 成员界面
+    member:
+      info:
+        material: PAPER
+        name: "&e公会信息"
+        lore:
+          - "&7等级: &e{level}"
+          - "&7成员: &e{members}/{max}"
+          - "&7经验: &e{exp}/{required}"
+      members:
+        material: PLAYER_HEAD
+        name: "&e公会成员"
+        lore:
+          - "&7点击查看所有公会成员"
+      settings:
+        material: REDSTONE
+        name: "&e个人设置"
+        lore:
+          - "&7点击修改个人设置"
+      leave:
+        material: BARRIER
+        name: "&c离开公会"
+        lore:
+          - "&7点击离开当前公会"
+      invite_toggle:
+        material: LEVER
+        name: "&e公会邀请"
+        lore:
+          - "&7状态: &a开启"
+      notify_toggle:
+        material: NOTE_BLOCK
+        name: "&e上下线通知"
+        lore:
+          - "&7状态: &a开启"
+    
+    # 官员界面
+    officer:
+      manage:
+        material: COMMAND_BLOCK
+        name: "&c管理公会"
+        lore:
+          - "&7点击管理公会"
+          - "&7重命名公会"
+          - "&7修改标签"
+          - "&7升级公会"
+          - "&7解散公会"
+    
+    # 会长界面
+    owner:
+      manage:
+        material: COMMAND_BLOCK
+        name: "&c管理公会"
+        lore:
+          - "&7点击管理公会"
+          - "&7重命名公会"
+          - "&7修改标签"
+          - "&7升级公会"
+          - "&7解散公会"
+  
+  # 颜色设置
+  colors:
+    owner: "&c"
+    officer: "&6"
+    member: "&a"
+    online: "&a"
+    offline: "&c"

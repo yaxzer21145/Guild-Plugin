@@ -232,4 +232,114 @@ public class GUIConfig {
     public String getOfflineColor() {
         return ChatColor.translateAlternateColorCodes('&', config.getString("gui.colors.offline", "&c"));
     }
+    
+    public String getBankTitle(String guildName) {
+        return ChatColor.translateAlternateColorCodes('&', config.getString("gui.title.bank", "&6公会银行: &e{name}").replace("{name}", guildName));
+    }
+    
+    public String getBankBalanceName() {
+        return ChatColor.translateAlternateColorCodes('&', config.getString("gui.items.bank.balance.name", "&e当前余额"));
+    }
+    
+    public String getBankBalanceLore(long balance) {
+        return ChatColor.translateAlternateColorCodes('&', config.getString("gui.items.bank.balance.lore", "&f余额: &a{balance}").replace("{balance}", String.valueOf(balance)));
+    }
+    
+    public String getBankDepositName() {
+        return ChatColor.translateAlternateColorCodes('&', config.getString("gui.items.bank.deposit.name", "&a存入资金"));
+    }
+    
+    public String getBankDepositLore() {
+        return ChatColor.translateAlternateColorCodes('&', config.getString("gui.items.bank.deposit.lore", "&f点击存入资金到公会银行"));
+    }
+    
+    public String getBankWithdrawName() {
+        return ChatColor.translateAlternateColorCodes('&', config.getString("gui.items.bank.withdraw.name", "&c取出资金"));
+    }
+    
+    public String getBankWithdrawLore() {
+        return ChatColor.translateAlternateColorCodes('&', config.getString("gui.items.bank.withdraw.lore", "&f点击从公会银行取出资金"));
+    }
+    
+    public String getBankName() {
+        return ChatColor.translateAlternateColorCodes('&', config.getString("gui.items.member.bank.name", "&e公会银行"));
+    }
+    
+    public List<String> getBankLore() {
+        return config.getStringList("gui.items.member.bank.lore");
+    }
+    
+    // Slot配置方法
+    public int getNoGuildBarrierSlot() {
+        return config.getInt("gui.items.no_guild.barrier.slot", 22);
+    }
+    
+    public int getCreateSlot() {
+        return config.getInt("gui.items.no_guild.create.slot", 11);
+    }
+    
+    public int getViewAllSlot() {
+        return config.getInt("gui.items.no_guild.view_all.slot", 15);
+    }
+    
+    public int getBackSlot() {
+        return config.getInt("gui.items.all_guilds.back.slot", 49);
+    }
+    
+    public int getInfoSlot() {
+        return config.getInt("gui.items.member.info.slot", 10);
+    }
+    
+    public int getMembersSlot() {
+        return config.getInt("gui.items.member.members.slot", 13);
+    }
+    
+    public int getSettingsSlot() {
+        return config.getInt("gui.items.member.settings.slot", 16);
+    }
+    
+    public int getLeaveSlot() {
+        return config.getInt("gui.items.member.leave.slot", 31);
+    }
+    
+    public int getInviteToggleSlot() {
+        return config.getInt("gui.items.member.invite_toggle.slot", 28);
+    }
+    
+    public int getNotifyToggleSlot() {
+        return config.getInt("gui.items.member.notify_toggle.slot", 34);
+    }
+    
+    public int getManageSlot() {
+        return config.getInt("gui.items.officer.manage.slot", 37);
+    }
+    
+    public int getUpgradeSlot() {
+        return config.getInt("gui.items.owner.upgrade.slot", 19);
+    }
+    
+    public int getBuyExpSlot() {
+        return config.getInt("gui.items.owner.buy_exp.slot", 25);
+    }
+    
+    public int getBankSlot() {
+        return config.getInt("gui.items.member.bank.slot", 22);
+    }
+    
+    // Bank GUI slots
+    public int getBankBalanceSlot() {
+        return config.getInt("gui.items.bank.balance.slot", 13);
+    }
+    
+    public int getBankDepositSlot() {
+        return config.getInt("gui.items.bank.deposit.slot", 20);
+    }
+    
+    public int getBankWithdrawSlot() {
+        return config.getInt("gui.items.bank.withdraw.slot", 24);
+    }
+    
+    public int getBankBackSlot() {
+        return config.getInt("gui.items.bank.back.slot", 40);
+    }
 }

@@ -148,6 +148,24 @@ public class GuildCommand implements CommandExecutor {
             case "reload":
                 handleReload(player, args);
                 break;
+            case "balance":
+                handleBalance(player);
+                break;
+            case "deposit":
+                handleDeposit(player, args);
+                break;
+            case "withdraw":
+                handleWithdraw(player, args);
+                break;
+            case "upgrade":
+                handleUpgrade(player, args);
+                break;
+            case "mute":
+                handleMute(player, args);
+                break;
+            case "unmute":
+                handleUnmute(player, args);
+                break;
             default:
                 sendHelp(player);
                 break;
@@ -186,6 +204,9 @@ public class GuildCommand implements CommandExecutor {
         player.sendMessage(ChatColor.WHITE + "/guild rename <新名称>" + ChatColor.GRAY + " - 重命名你的公会名称(需审核)");
         player.sendMessage(ChatColor.WHITE + "/guild online" + ChatColor.GRAY + " - 查看公会中在线的成员");
         player.sendMessage(ChatColor.WHITE + "/guild invite <玩家>" + ChatColor.GRAY + " - 邀请玩家加入到你的公会");
+        player.sendMessage(ChatColor.WHITE + "/guild upgrade <bexp50 | upgrade>" + ChatColor.GRAY + " - 购买经验或直接升级公会");
+        player.sendMessage(ChatColor.WHITE + "/guild mute <玩家> <时间>" + ChatColor.GRAY + " - 禁言公会成员（管理员以上）");
+        player.sendMessage(ChatColor.WHITE + "/guild unmute <玩家>" + ChatColor.GRAY + " - 解除公会成员禁言（管理员以上）");
         
         if (player.hasPermission("guild.admin")) {
             player.sendMessage(ChatColor.RED + "-----------------公会ADMIN------------------");
@@ -552,16 +573,41 @@ public class GuildCommand implements CommandExecutor {
             return;
         }
         
-        Player target = Bukkit.getPlayer(args[1]);
-        if (target == null) {
-            player.sendMessage(ChatColor.RED + "玩家不在线");
-            return;
+        String targetName = args[1];
+        Player target = Bukkit.getPlayer(targetName);
+        UUID targetUuid = null;
+        String displayName = null;
+        
+        if (target != null) {
+            targetUuid = target.getUniqueId();
+            displayName = target.getName();
+        } else {
+            // 尝试通过公会成员列表查找（支持离线玩家）
+            boolean found = false;
+            for (GuildMember member : guild.getMembers().values()) {
+                // 由于没有存储玩家名，这里无法通过名称查找
+                // 直接使用在线玩家检测
+                Player onlinePlayer = Bukkit.getPlayer(member.getUuid());
+                if (onlinePlayer != null && onlinePlayer.getName().equalsIgnoreCase(targetName)) {
+                    targetUuid = member.getUuid();
+                    displayName = onlinePlayer.getName();
+                    found = true;
+                    break;
+                }
+            }
+            
+            if (!found) {
+                player.sendMessage(ChatColor.RED + "玩家不在线或不在公会中");
+                return;
+            }
         }
         
-        if (guildManager.promoteMember(guild.getName(), target.getUniqueId(), player.getUniqueId())) {
-            player.sendMessage(ChatColor.GREEN + "已提升 " + target.getName());
-            target.sendMessage(ChatColor.GREEN + "你被提升为 " + guild.getMember(target.getUniqueId()).getRole().getDisplayName());
-            guild.broadcast(ChatColor.YELLOW + target.getName() + " 被提升为 " + guild.getMember(target.getUniqueId()).getRole().getDisplayName());
+        if (guildManager.promoteMember(guild.getName(), targetUuid, player.getUniqueId())) {
+            player.sendMessage(ChatColor.GREEN + "已提升 " + displayName);
+            if (target != null) {
+                target.sendMessage(ChatColor.GREEN + "你被提升为 " + guild.getMember(targetUuid).getRole().getDisplayName());
+            }
+            guild.broadcast(ChatColor.YELLOW + displayName + " 被提升为 " + guild.getMember(targetUuid).getRole().getDisplayName());
         } else {
             player.sendMessage(ChatColor.RED + "无法提升该玩家，你没有权限或该成员已是最高职位");
         }
@@ -579,16 +625,41 @@ public class GuildCommand implements CommandExecutor {
             return;
         }
         
-        Player target = Bukkit.getPlayer(args[1]);
-        if (target == null) {
-            player.sendMessage(ChatColor.RED + "玩家不在线");
-            return;
+        String targetName = args[1];
+        Player target = Bukkit.getPlayer(targetName);
+        UUID targetUuid = null;
+        String displayName = null;
+        
+        if (target != null) {
+            targetUuid = target.getUniqueId();
+            displayName = target.getName();
+        } else {
+            // 尝试通过公会成员列表查找（支持离线玩家）
+            boolean found = false;
+            for (GuildMember member : guild.getMembers().values()) {
+                // 由于没有存储玩家名，这里无法通过名称查找
+                // 直接使用在线玩家检测
+                Player onlinePlayer = Bukkit.getPlayer(member.getUuid());
+                if (onlinePlayer != null && onlinePlayer.getName().equalsIgnoreCase(targetName)) {
+                    targetUuid = member.getUuid();
+                    displayName = onlinePlayer.getName();
+                    found = true;
+                    break;
+                }
+            }
+            
+            if (!found) {
+                player.sendMessage(ChatColor.RED + "玩家不在线或不在公会中");
+                return;
+            }
         }
         
-        if (guildManager.demoteMember(guild.getName(), target.getUniqueId(), player.getUniqueId())) {
-            player.sendMessage(ChatColor.GREEN + "已降低 " + target.getName());
-            target.sendMessage(ChatColor.YELLOW + "你被降职为 " + guild.getMember(target.getUniqueId()).getRole().getDisplayName());
-            guild.broadcast(ChatColor.YELLOW + target.getName() + " 被降职为 " + guild.getMember(target.getUniqueId()).getRole().getDisplayName());
+        if (guildManager.demoteMember(guild.getName(), targetUuid, player.getUniqueId())) {
+            player.sendMessage(ChatColor.GREEN + "已降低 " + displayName);
+            if (target != null) {
+                target.sendMessage(ChatColor.YELLOW + "你被降职为 " + guild.getMember(targetUuid).getRole().getDisplayName());
+            }
+            guild.broadcast(ChatColor.YELLOW + displayName + " 被降职为 " + guild.getMember(targetUuid).getRole().getDisplayName());
         } else {
             player.sendMessage(ChatColor.RED + "无法降低该玩家，你没有权限或该成员已是最低职位");
         }
@@ -874,7 +945,49 @@ public class GuildCommand implements CommandExecutor {
     }
     
     private void handleSettings(Player player, String[] args) {
-        player.sendMessage(ChatColor.YELLOW + "公会设置功能暂未实现");
+        if (args.length < 2) {
+            player.sendMessage(ChatColor.GOLD + "=== 个人设置 ===");
+            player.sendMessage(ChatColor.WHITE + "/guild settings nickname <昵称>" + ChatColor.GRAY + " - 设置你的公会昵称");
+            player.sendMessage(ChatColor.WHITE + "/guild settings clearnick" + ChatColor.GRAY + " - 清除你的公会昵称");
+            return;
+        }
+        
+        Guild guild = guildManager.getPlayerGuild(player.getUniqueId());
+        if (guild == null) {
+            player.sendMessage(ChatColor.RED + "你不在任何公会中");
+            return;
+        }
+        
+        GuildMember member = guild.getMember(player.getUniqueId());
+        if (member == null) {
+            player.sendMessage(ChatColor.RED + "你不在公会中");
+            return;
+        }
+        
+        String subCommand = args[1].toLowerCase();
+        
+        if (subCommand.equals("nickname")) {
+            if (args.length < 3) {
+                player.sendMessage(ChatColor.RED + "用法: /guild settings nickname <昵称>");
+                return;
+            }
+            
+            String nickname = String.join(" ", args).substring(23);
+            if (nickname.length() > 16) {
+                player.sendMessage(ChatColor.RED + "昵称长度不能超过16个字符");
+                return;
+            }
+            
+            member.setNickname(nickname);
+            plugin.getDatabaseManager().saveGuild(guild);
+            player.sendMessage(ChatColor.GREEN + "你的公会昵称已设置为: " + nickname);
+        } else if (subCommand.equals("clearnick")) {
+            member.setNickname(null);
+            plugin.getDatabaseManager().saveGuild(guild);
+            player.sendMessage(ChatColor.GREEN + "你的公会昵称已清除");
+        } else {
+            player.sendMessage(ChatColor.RED + "未知的设置命令");
+        }
     }
     
     private void handlePermission(Player player, String[] args) {
@@ -1045,5 +1158,384 @@ public class GuildCommand implements CommandExecutor {
                     ChatColor.WHITE + " 成员: " + guild.getMembers().size() + 
                     ChatColor.WHITE + " 经验: " + guild.getExperience());
         });
+    }
+    
+    private void handleBalance(Player player) {
+        Guild guild = guildManager.getPlayerGuild(player.getUniqueId());
+        if (guild == null) {
+            player.sendMessage(ChatColor.RED + "你不在任何公会中");
+            return;
+        }
+        
+        long balance = guildManager.getGuildBalance(guild.getName());
+        player.sendMessage(ChatColor.GOLD + "=== 公会银行 ===");
+        player.sendMessage(ChatColor.WHITE + "公会名称: " + ChatColor.YELLOW + guild.getName());
+        player.sendMessage(ChatColor.WHITE + "当前余额: " + ChatColor.GREEN + balance);
+    }
+    
+    private void handleDeposit(Player player, String[] args) {
+        if (args.length < 2) {
+            player.sendMessage(ChatColor.RED + "用法: /guild deposit <金额>");
+            return;
+        }
+        
+        Guild guild = guildManager.getPlayerGuild(player.getUniqueId());
+        if (guild == null) {
+            player.sendMessage(ChatColor.RED + "你不在任何公会中");
+            return;
+        }
+        
+        try {
+            long amount = Long.parseLong(args[1]);
+            if (amount <= 0) {
+                player.sendMessage(ChatColor.RED + "金额必须大于0");
+                return;
+            }
+            
+            if (!checkPlayerBalance(player, amount)) {
+                player.sendMessage(ChatColor.RED + "你的余额不足");
+                return;
+            }
+            
+            if (deductPlayerBalance(player, amount)) {
+                if (guildManager.depositToBank(guild.getName(), player.getUniqueId(), amount)) {
+                    player.sendMessage(ChatColor.GREEN + "成功存入 " + amount + " 到公会银行");
+                    guild.broadcast(ChatColor.YELLOW + player.getName() + " 向公会银行存入了 " + amount);
+                } else {
+                    refundPlayerBalance(player, amount);
+                    player.sendMessage(ChatColor.RED + "存款失败");
+                }
+            }
+        } catch (NumberFormatException e) {
+            player.sendMessage(ChatColor.RED + "无效的金额");
+        }
+    }
+    
+    private void handleWithdraw(Player player, String[] args) {
+        if (args.length < 2) {
+            player.sendMessage(ChatColor.RED + "用法: /guild withdraw <金额>");
+            return;
+        }
+        
+        Guild guild = guildManager.getPlayerGuild(player.getUniqueId());
+        if (guild == null) {
+            player.sendMessage(ChatColor.RED + "你不在任何公会中");
+            return;
+        }
+        
+        try {
+            long amount = Long.parseLong(args[1]);
+            if (amount <= 0) {
+                player.sendMessage(ChatColor.RED + "金额必须大于0");
+                return;
+            }
+            
+            if (guildManager.withdrawFromBank(guild.getName(), player.getUniqueId(), amount)) {
+                player.sendMessage(ChatColor.GREEN + "成功从公会银行取出 " + amount);
+                guild.broadcast(ChatColor.YELLOW + player.getName() + " 从公会银行取出了 " + amount);
+            } else {
+                player.sendMessage(ChatColor.RED + "取款失败，余额不足或没有权限");
+            }
+        } catch (NumberFormatException e) {
+            player.sendMessage(ChatColor.RED + "无效的金额");
+        }
+    }
+    
+    private boolean checkPlayerBalance(Player player, long amount) {
+        try {
+            if (Bukkit.getPluginManager().getPlugin("Vault") != null) {
+                RegisteredServiceProvider<?> rsp = Bukkit.getServicesManager().getRegistration(Class.forName("net.milkbowl.vault.economy.Economy"));
+                if (rsp != null) {
+                    Object economy = rsp.getProvider();
+                    Method getBalance = economy.getClass().getMethod("getBalance", String.class);
+                    double balance = (double) getBalance.invoke(economy, player.getName());
+                    return balance >= amount;
+                }
+            }
+            
+            if (Bukkit.getPluginManager().getPlugin("PlayerPoints") != null) {
+                Object playerPoints = Bukkit.getPluginManager().getPlugin("PlayerPoints");
+                Method getAPI = playerPoints.getClass().getMethod("getAPI");
+                Object api = getAPI.invoke(playerPoints);
+                Method look = api.getClass().getMethod("look", UUID.class);
+                int points = (int) look.invoke(api, player.getUniqueId());
+                return points >= amount;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+    
+    private boolean deductPlayerBalance(Player player, long amount) {
+        try {
+            if (Bukkit.getPluginManager().getPlugin("Vault") != null) {
+                RegisteredServiceProvider<?> rsp = Bukkit.getServicesManager().getRegistration(Class.forName("net.milkbowl.vault.economy.Economy"));
+                if (rsp != null) {
+                    Object economy = rsp.getProvider();
+                    Method withdraw = economy.getClass().getMethod("withdrawPlayer", String.class, double.class);
+                    withdraw.invoke(economy, player.getName(), (double) amount);
+                    return true;
+                }
+            }
+            
+            if (Bukkit.getPluginManager().getPlugin("PlayerPoints") != null) {
+                Object playerPoints = Bukkit.getPluginManager().getPlugin("PlayerPoints");
+                Method getAPI = playerPoints.getClass().getMethod("getAPI");
+                Object api = getAPI.invoke(playerPoints);
+                Method take = api.getClass().getMethod("take", UUID.class, int.class);
+                take.invoke(api, player.getUniqueId(), (int) amount);
+                return true;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+    
+    private void refundPlayerBalance(Player player, long amount) {
+        try {
+            if (Bukkit.getPluginManager().getPlugin("Vault") != null) {
+                RegisteredServiceProvider<?> rsp = Bukkit.getServicesManager().getRegistration(Class.forName("net.milkbowl.vault.economy.Economy"));
+                if (rsp != null) {
+                    Object economy = rsp.getProvider();
+                    Method deposit = economy.getClass().getMethod("depositPlayer", String.class, double.class);
+                    deposit.invoke(economy, player.getName(), (double) amount);
+                }
+            }
+            
+            if (Bukkit.getPluginManager().getPlugin("PlayerPoints") != null) {
+                Object playerPoints = Bukkit.getPluginManager().getPlugin("PlayerPoints");
+                Method getAPI = playerPoints.getClass().getMethod("getAPI");
+                Object api = getAPI.invoke(playerPoints);
+                Method give = api.getClass().getMethod("give", UUID.class, int.class);
+                give.invoke(api, player.getUniqueId(), (int) amount);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+    
+    private void handleUpgrade(Player player, String[] args) {
+        Guild guild = guildManager.getPlayerGuild(player.getUniqueId());
+        if (guild == null) {
+            player.sendMessage(ChatColor.RED + "你不在任何公会中");
+            return;
+        }
+        
+        if (args.length < 2) {
+            player.sendMessage(ChatColor.RED + "用法: /guild upgrade <bexp50 | upgrade>");
+            player.sendMessage(ChatColor.GRAY + "  bexp50 - 使用货币购买50经验");
+            player.sendMessage(ChatColor.GRAY + "  upgrade - 使用货币直接升级公会");
+            return;
+        }
+        
+        String action = args[1].toLowerCase();
+        
+        switch (action) {
+            case "bexp50":
+            case "buyexp":
+                if (guildManager.addExperienceWithCurrency(guild.getName(), player.getUniqueId())) {
+                    int expAmount = plugin.getCurrencyConfig().getExperienceAmount();
+                    long cost = plugin.getCurrencyConfig().getExperienceCost();
+                    String currencyName = plugin.getGuildCurrency().formatAmount(cost, plugin.getCurrencyConfig().getCurrencyType());
+                    player.sendMessage(ChatColor.GREEN + "成功使用 " + currencyName + " 购买了 " + expAmount + " 经验！");
+                    guild.broadcast(ChatColor.YELLOW + player.getName() + " 使用 " + currencyName + " 为公会购买了 " + expAmount + " 经验");
+                } else {
+                    long cost = plugin.getCurrencyConfig().getExperienceCost();
+                    String currencyName = plugin.getGuildCurrency().formatAmount(cost, plugin.getCurrencyConfig().getCurrencyType());
+                    player.sendMessage(ChatColor.RED + "购买失败，你可能没有足够的 " + currencyName);
+                }
+                break;
+            case "upgrade":
+                if (!guild.getOwner().equals(player.getUniqueId())) {
+                    player.sendMessage(ChatColor.RED + "只有公会会长才能升级公会");
+                    return;
+                }
+                if (guild.getLevel() >= 100) {
+                    player.sendMessage(ChatColor.RED + "公会已达到最高等级");
+                    return;
+                }
+                if (guildManager.upgradeGuild(guild.getName(), player.getUniqueId())) {
+                    long cost = plugin.getCurrencyConfig().getLevelUpCost();
+                    String currencyName = plugin.getGuildCurrency().formatAmount(cost, plugin.getCurrencyConfig().getCurrencyType());
+                    player.sendMessage(ChatColor.GREEN + "成功使用 " + currencyName + " 将公会升级到 " + guild.getLevel() + " 级！");
+                    guild.broadcast(ChatColor.YELLOW + "恭喜！公会在 " + player.getName() + " 的努力下升级到了 " + guild.getLevel() + " 级！");
+                } else {
+                    long cost = plugin.getCurrencyConfig().getLevelUpCost();
+                    String currencyName = plugin.getGuildCurrency().formatAmount(cost, plugin.getCurrencyConfig().getCurrencyType());
+                    player.sendMessage(ChatColor.RED + "升级失败，你可能没有足够的 " + currencyName);
+                }
+                break;
+            default:
+                player.sendMessage(ChatColor.RED + "用法: /guild upgrade <bexp50 | upgrade>");
+                player.sendMessage(ChatColor.GRAY + "  bexp50 - 使用货币购买50经验");
+                player.sendMessage(ChatColor.GRAY + "  upgrade - 使用货币直接升级公会");
+                break;
+        }
+    }
+    
+    private void handleMute(Player player, String[] args) {
+        Guild guild = guildManager.getPlayerGuild(player.getUniqueId());
+        if (guild == null) {
+            player.sendMessage(ChatColor.RED + "你不在任何公会中");
+            return;
+        }
+        
+        if (args.length < 3) {
+            player.sendMessage(ChatColor.RED + "用法: /guild mute <玩家> <时间>");
+            player.sendMessage(ChatColor.GRAY + "时间格式: 90d20m1s (天、分、秒)");
+            player.sendMessage(ChatColor.GRAY + "最长时间: 999天");
+            return;
+        }
+        
+        String targetName = args[1];
+        String timeStr = args[2];
+        
+        // 解析时间
+        long duration = parseTime(timeStr);
+        if (duration <= 0) {
+            player.sendMessage(ChatColor.RED + "无效的时间格式");
+            player.sendMessage(ChatColor.GRAY + "正确格式: 90d20m1s (天、分、秒)");
+            return;
+        }
+        
+        // 检查最长时间限制（999天）
+        long maxDuration = 999 * 24 * 60 * 60 * 1000L;
+        if (duration > maxDuration) {
+            player.sendMessage(ChatColor.RED + "时间过长，最长只能为999天");
+            return;
+        }
+        
+        Player target = Bukkit.getPlayer(targetName);
+        if (target == null) {
+            player.sendMessage(ChatColor.RED + "玩家不在线");
+            return;
+        }
+        
+        UUID targetUuid = target.getUniqueId();
+        if (!guild.isMember(targetUuid)) {
+            player.sendMessage(ChatColor.RED + "目标玩家不在你的公会中");
+            return;
+        }
+        
+        // 检查权限
+        GuildMember playerMember = guild.getMember(player.getUniqueId());
+        GuildMember targetMember = guild.getMember(targetUuid);
+        
+        if (playerMember.getRole() == GuildRole.MEMBER) {
+            player.sendMessage(ChatColor.RED + "你没有权限执行此操作");
+            return;
+        }
+        
+        // 管理员不能禁言其他管理员或会长
+        if (playerMember.getRole() == GuildRole.OFFICER) {
+            if (targetMember.getRole() == GuildRole.OFFICER || targetMember.getRole() == GuildRole.OWNER) {
+                player.sendMessage(ChatColor.RED + "你不能禁言其他管理员或会长");
+                return;
+            }
+        }
+        
+        // 会长不能禁言自己
+        if (playerMember.getRole() == GuildRole.OWNER && targetUuid.equals(player.getUniqueId())) {
+            player.sendMessage(ChatColor.RED + "你不能禁言自己");
+            return;
+        }
+        
+        // 执行禁言
+        targetMember.mute(duration);
+        plugin.getDatabaseManager().saveGuild(guild);
+        
+        String timeDisplay = formatTime(duration);
+        player.sendMessage(ChatColor.GREEN + "成功禁言 " + target.getName() + " " + timeDisplay);
+        target.sendMessage(ChatColor.RED + "你被禁言 " + timeDisplay + "，无法在公会频道发言");
+        guild.broadcast(ChatColor.YELLOW + target.getName() + " 被禁言 " + timeDisplay);
+    }
+    
+    private void handleUnmute(Player player, String[] args) {
+        Guild guild = guildManager.getPlayerGuild(player.getUniqueId());
+        if (guild == null) {
+            player.sendMessage(ChatColor.RED + "你不在任何公会中");
+            return;
+        }
+        
+        if (args.length < 2) {
+            player.sendMessage(ChatColor.RED + "用法: /guild unmute <玩家>");
+            return;
+        }
+        
+        String targetName = args[1];
+        Player target = Bukkit.getPlayer(targetName);
+        if (target == null) {
+            player.sendMessage(ChatColor.RED + "玩家不在线");
+            return;
+        }
+        
+        UUID targetUuid = target.getUniqueId();
+        if (!guild.isMember(targetUuid)) {
+            player.sendMessage(ChatColor.RED + "目标玩家不在你的公会中");
+            return;
+        }
+        
+        // 检查权限
+        GuildMember playerMember = guild.getMember(player.getUniqueId());
+        if (playerMember.getRole() == GuildRole.MEMBER) {
+            player.sendMessage(ChatColor.RED + "你没有权限执行此操作");
+            return;
+        }
+        
+        // 执行解除禁言
+        GuildMember targetMember = guild.getMember(targetUuid);
+        if (!targetMember.isMuted()) {
+            player.sendMessage(ChatColor.RED + "该玩家未被禁言");
+            return;
+        }
+        
+        targetMember.unmute();
+        plugin.getDatabaseManager().saveGuild(guild);
+        
+        player.sendMessage(ChatColor.GREEN + "成功解除 " + target.getName() + " 的禁言");
+        target.sendMessage(ChatColor.GREEN + "你的禁言已被解除");
+        guild.broadcast(ChatColor.YELLOW + target.getName() + " 的禁言已被解除");
+    }
+    
+    private long parseTime(String timeStr) {
+        long duration = 0;
+        
+        // 匹配天、分、秒
+        java.util.regex.Matcher matcher = java.util.regex.Pattern.compile("([0-9]+)([dms])").matcher(timeStr);
+        while (matcher.find()) {
+            int value = Integer.parseInt(matcher.group(1));
+            char unit = matcher.group(2).charAt(0);
+            
+            switch (unit) {
+                case 'd':
+                    duration += (long) value * 24 * 60 * 60 * 1000;
+                    break;
+                case 'm':
+                    duration += (long) value * 60 * 1000;
+                    break;
+                case 's':
+                    duration += (long) value * 1000;
+                    break;
+            }
+        }
+        
+        return duration;
+    }
+    
+    private String formatTime(long duration) {
+        long days = duration / (24 * 60 * 60 * 1000);
+        long hours = (duration % (24 * 60 * 60 * 1000)) / (60 * 60 * 1000);
+        long minutes = (duration % (60 * 60 * 1000)) / (60 * 1000);
+        long seconds = (duration % (60 * 1000)) / 1000;
+        
+        StringBuilder sb = new StringBuilder();
+        if (days > 0) sb.append(days).append("天");
+        if (hours > 0) sb.append(hours).append("小时");
+        if (minutes > 0) sb.append(minutes).append("分钟");
+        if (seconds > 0 || sb.length() == 0) sb.append(seconds).append("秒");
+        
+        return sb.toString();
     }
 }

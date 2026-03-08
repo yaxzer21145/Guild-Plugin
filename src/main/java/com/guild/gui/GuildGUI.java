@@ -15,7 +15,6 @@ import org.bukkit.inventory.meta.ItemMeta;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.UUID;
 
 public class GuildGUI {
     
@@ -44,17 +43,17 @@ public class GuildGUI {
         ItemStack barrier = createItem(VersionCompat.getBarrierMaterial(), 
                 plugin.getGUIConfig().getNoGuildBarrierName(), 
                 plugin.getGUIConfig().getNoGuildBarrierLore().toArray(new String[0]));
-        inv.setItem(22, barrier);
+        inv.setItem(plugin.getGUIConfig().getNoGuildBarrierSlot(), barrier);
         
         ItemStack create = createItem(VersionCompat.getDiamondMaterial(), 
                 plugin.getGUIConfig().getCreateName(), 
                 plugin.getGUIConfig().getCreateLore().toArray(new String[0]));
-        inv.setItem(11, create);
+        inv.setItem(plugin.getGUIConfig().getCreateSlot(), create);
         
         ItemStack list = createItem(VersionCompat.getBookMaterial(), 
                 plugin.getGUIConfig().getViewAllName(), 
                 plugin.getGUIConfig().getViewAllLore().toArray(new String[0]));
-        inv.setItem(15, list);
+        inv.setItem(plugin.getGUIConfig().getViewAllSlot(), list);
         
         player.openInventory(inv);
     }
@@ -66,32 +65,37 @@ public class GuildGUI {
         ItemStack info = createItem(VersionCompat.getPaperMaterial(), 
                 plugin.getGUIConfig().getInfoName(), 
                 plugin.getGUIConfig().getInfoLore().toArray(new String[0]));
-        inv.setItem(10, info);
+        inv.setItem(plugin.getGUIConfig().getInfoSlot(), info);
         
         ItemStack members = createItem(VersionCompat.getPlayerHeadMaterial(), 
                 plugin.getGUIConfig().getMembersName(), 
                 plugin.getGUIConfig().getMembersLore().toArray(new String[0]));
-        inv.setItem(13, members);
+        inv.setItem(plugin.getGUIConfig().getMembersSlot(), members);
         
         ItemStack settings = createItem(VersionCompat.getRedstoneMaterial(), 
                 plugin.getGUIConfig().getSettingsName(), 
                 plugin.getGUIConfig().getSettingsLore().toArray(new String[0]));
-        inv.setItem(16, settings);
+        inv.setItem(plugin.getGUIConfig().getSettingsSlot(), settings);
+        
+        ItemStack bank = createItem(VersionCompat.getGoldIngotMaterial(),
+                plugin.getGUIConfig().getBankName(),
+                plugin.getGUIConfig().getBankLore().toArray(new String[0]));
+        inv.setItem(plugin.getGUIConfig().getBankSlot(), bank);
         
         ItemStack leave = createItem(VersionCompat.getBarrierMaterial(), 
                 plugin.getGUIConfig().getLeaveName(), 
                 plugin.getGUIConfig().getLeaveLore().toArray(new String[0]));
-        inv.setItem(31, leave);
+        inv.setItem(plugin.getGUIConfig().getLeaveSlot(), leave);
         
         ItemStack inviteToggle = createItem(VersionCompat.getLeverMaterial(), 
                 plugin.getGUIConfig().getInviteToggleName(), 
                 plugin.getGUIConfig().getInviteToggleLore().toArray(new String[0]));
-        inv.setItem(28, inviteToggle);
+        inv.setItem(plugin.getGUIConfig().getInviteToggleSlot(), inviteToggle);
         
         ItemStack notifyToggle = createItem(VersionCompat.getNoteBlockMaterial(), 
                 plugin.getGUIConfig().getNotifyToggleName(), 
                 plugin.getGUIConfig().getNotifyToggleLore().toArray(new String[0]));
-        inv.setItem(34, notifyToggle);
+        inv.setItem(plugin.getGUIConfig().getNotifyToggleSlot(), notifyToggle);
         
         int slot = 45;
         for (GuildMember member : guild.getMembers().values()) {
@@ -120,37 +124,42 @@ public class GuildGUI {
         ItemStack info = createItem(VersionCompat.getPaperMaterial(), 
                 plugin.getGUIConfig().getInfoName(), 
                 plugin.getGUIConfig().getInfoLore().toArray(new String[0]));
-        inv.setItem(10, info);
+        inv.setItem(plugin.getGUIConfig().getInfoSlot(), info);
         
         ItemStack members = createItem(VersionCompat.getPlayerHeadMaterial(), 
                 plugin.getGUIConfig().getMembersName(), 
                 plugin.getGUIConfig().getMembersLore().toArray(new String[0]));
-        inv.setItem(13, members);
+        inv.setItem(plugin.getGUIConfig().getMembersSlot(), members);
         
         ItemStack settings = createItem(VersionCompat.getRedstoneMaterial(), 
                 plugin.getGUIConfig().getSettingsName(), 
                 plugin.getGUIConfig().getSettingsLore().toArray(new String[0]));
-        inv.setItem(16, settings);
+        inv.setItem(plugin.getGUIConfig().getSettingsSlot(), settings);
         
         ItemStack manage = createItem(VersionCompat.getCommandBlockMaterial(), 
                 plugin.getGUIConfig().getManageName(), 
                 plugin.getGUIConfig().getManageLore().toArray(new String[0]));
-        inv.setItem(37, manage);
+        inv.setItem(plugin.getGUIConfig().getManageSlot(), manage);
+        
+        ItemStack bank = createItem(VersionCompat.getGoldIngotMaterial(),
+                plugin.getGUIConfig().getBankName(), 
+                plugin.getGUIConfig().getBankLore().toArray(new String[0]));
+        inv.setItem(plugin.getGUIConfig().getBankSlot(), bank);
         
         ItemStack leave = createItem(VersionCompat.getBarrierMaterial(), 
                 plugin.getGUIConfig().getLeaveName(), 
                 plugin.getGUIConfig().getLeaveLore().toArray(new String[0]));
-        inv.setItem(31, leave);
+        inv.setItem(plugin.getGUIConfig().getLeaveSlot(), leave);
         
         ItemStack inviteToggle = createItem(VersionCompat.getLeverMaterial(), 
                 plugin.getGUIConfig().getInviteToggleName(), 
                 plugin.getGUIConfig().getInviteToggleLore().toArray(new String[0]));
-        inv.setItem(28, inviteToggle);
+        inv.setItem(plugin.getGUIConfig().getInviteToggleSlot(), inviteToggle);
         
         ItemStack notifyToggle = createItem(VersionCompat.getNoteBlockMaterial(), 
                 plugin.getGUIConfig().getNotifyToggleName(), 
                 plugin.getGUIConfig().getNotifyToggleLore().toArray(new String[0]));
-        inv.setItem(34, notifyToggle);
+        inv.setItem(plugin.getGUIConfig().getNotifyToggleSlot(), notifyToggle);
         
         int slot = 45;
         for (GuildMember member : guild.getMembers().values()) {
@@ -179,37 +188,60 @@ public class GuildGUI {
         ItemStack info = createItem(VersionCompat.getPaperMaterial(), 
                 plugin.getGUIConfig().getInfoName(), 
                 plugin.getGUIConfig().getInfoLore().toArray(new String[0]));
-        inv.setItem(10, info);
+        inv.setItem(plugin.getGUIConfig().getInfoSlot(), info);
         
         ItemStack members = createItem(VersionCompat.getPlayerHeadMaterial(), 
                 plugin.getGUIConfig().getMembersName(), 
                 plugin.getGUIConfig().getMembersLore().toArray(new String[0]));
-        inv.setItem(13, members);
+        inv.setItem(plugin.getGUIConfig().getMembersSlot(), members);
         
         ItemStack settings = createItem(VersionCompat.getRedstoneMaterial(), 
                 plugin.getGUIConfig().getSettingsName(), 
                 plugin.getGUIConfig().getSettingsLore().toArray(new String[0]));
-        inv.setItem(16, settings);
+        inv.setItem(plugin.getGUIConfig().getSettingsSlot(), settings);
         
         ItemStack manage = createItem(VersionCompat.getCommandBlockMaterial(), 
                 plugin.getGUIConfig().getManageName(), 
                 plugin.getGUIConfig().getManageLore().toArray(new String[0]));
-        inv.setItem(37, manage);
+        inv.setItem(plugin.getGUIConfig().getManageSlot(), manage);
+        
+        ItemStack bank = createItem(VersionCompat.getGoldIngotMaterial(),
+                plugin.getGUIConfig().getBankName(), 
+                plugin.getGUIConfig().getBankLore().toArray(new String[0]));
+        inv.setItem(plugin.getGUIConfig().getBankSlot(), bank);
+        
+        ItemStack upgrade = createItem(VersionCompat.getEmeraldMaterial(),
+                ChatColor.GREEN + "升级公会",
+                ChatColor.GRAY + "当前等级: " + guild.getLevel(),
+                ChatColor.GRAY + "升级所需: " + plugin.getGuildCurrency().formatAmount(
+                    plugin.getCurrencyConfig().getLevelUpCost(), 
+                    plugin.getCurrencyConfig().getCurrencyType()),
+                ChatColor.YELLOW + "点击升级公会");
+        inv.setItem(plugin.getGUIConfig().getUpgradeSlot(), upgrade);
+        
+        ItemStack buyExp = createItem(VersionCompat.getExperienceBottleMaterial(),
+                ChatColor.AQUA + "购买经验",
+                ChatColor.GRAY + "获得: " + plugin.getCurrencyConfig().getExperienceAmount() + " 经验",
+                ChatColor.GRAY + "所需: " + plugin.getGuildCurrency().formatAmount(
+                    plugin.getCurrencyConfig().getExperienceCost(),
+                    plugin.getCurrencyConfig().getCurrencyType()),
+                ChatColor.YELLOW + "点击购买经验");
+        inv.setItem(plugin.getGUIConfig().getBuyExpSlot(), buyExp);
         
         ItemStack leave = createItem(VersionCompat.getBarrierMaterial(), 
                 plugin.getGUIConfig().getLeaveName(), 
                 plugin.getGUIConfig().getLeaveLore().toArray(new String[0]));
-        inv.setItem(31, leave);
+        inv.setItem(plugin.getGUIConfig().getLeaveSlot(), leave);
         
         ItemStack inviteToggle = createItem(VersionCompat.getLeverMaterial(), 
                 plugin.getGUIConfig().getInviteToggleName(), 
                 plugin.getGUIConfig().getInviteToggleLore().toArray(new String[0]));
-        inv.setItem(28, inviteToggle);
+        inv.setItem(plugin.getGUIConfig().getInviteToggleSlot(), inviteToggle);
         
         ItemStack notifyToggle = createItem(VersionCompat.getNoteBlockMaterial(), 
                 plugin.getGUIConfig().getNotifyToggleName(), 
                 plugin.getGUIConfig().getNotifyToggleLore().toArray(new String[0]));
-        inv.setItem(34, notifyToggle);
+        inv.setItem(plugin.getGUIConfig().getNotifyToggleSlot(), notifyToggle);
         
         int slot = 45;
         for (GuildMember member : guild.getMembers().values()) {

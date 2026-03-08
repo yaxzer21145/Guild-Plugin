@@ -36,6 +36,12 @@ public class GuildChatCommand implements CommandExecutor {
             return true;
         }
         
+        // 检查是否被禁言
+        if (guild.getMember(player.getUniqueId()).isMuted()) {
+            player.sendMessage(ChatColor.RED + "你已被禁言，无法在公会频道发言");
+            return true;
+        }
+        
         String message = String.join(" ", args);
         guild.broadcast(ChatColor.translateAlternateColorCodes('&', guild.getTagColor() + "[" + guild.getTag() + "] ") + 
                 ChatColor.WHITE + player.getName() + ChatColor.GRAY + ": " + ChatColor.WHITE + message);

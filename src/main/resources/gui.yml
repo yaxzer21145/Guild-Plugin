@@ -1,16 +1,10 @@
 # Guild插件GUI配置文件
 
+# 语言设置
+language: zh_cn
+
 # GUI设置
 gui:
-  # GUI标题
-  title:
-    main: "&6公会系统"
-    no_guild: "&6公会系统"
-    all_guilds: "&6所有公会"
-    member: "&6公会: &e{name}"
-    officer: "&6公会管理: &e{name}"
-    owner: "&6公会会长: &e{name}"
-  
   # GUI大小 (9的倍数: 9, 18, 27, 36, 45, 54)
   size:
     main: 54
@@ -22,93 +16,63 @@ gui:
     no_guild:
       barrier:
         material: BARRIER
-        name: "&c你还没有公会"
-        lore:
-          - "&7创建或加入一个公会来开始"
+        slot: 22
       create:
         material: DIAMOND
-        name: "&a创建公会"
-        lore:
-          - "&7点击创建一个新的公会"
+        slot: 11
       view_all:
         material: BOOK
-        name: "&e查看所有公会"
-        lore:
-          - "&7点击查看服务器上的所有公会"
+        slot: 15
     
     # 所有公会界面
     all_guilds:
       guild_item:
         material: DIAMOND_BLOCK
-        lore:
-          - "&7等级: &e{level}"
-          - "&7成员: &e{members}/{max}"
-          - "&7经验: &e{exp}"
-          - "&7标签: &e{tag}"
       back:
         material: ARROW
-        name: "&c返回"
-        lore:
-          - "&7返回主菜单"
+        slot: 49
     
     # 成员界面
     member:
       info:
         material: PAPER
-        name: "&e公会信息"
-        lore:
-          - "&7等级: &e{level}"
-          - "&7成员: &e{members}/{max}"
-          - "&7经验: &e{exp}/{required}"
+        slot: 10
       members:
         material: PLAYER_HEAD
-        name: "&e公会成员"
-        lore:
-          - "&7点击查看所有公会成员"
+        slot: 13
       settings:
         material: REDSTONE
-        name: "&e个人设置"
-        lore:
-          - "&7点击修改个人设置"
+        slot: 16
       leave:
         material: BARRIER
-        name: "&c离开公会"
-        lore:
-          - "&7点击离开当前公会"
+        slot: 31
       invite_toggle:
         material: LEVER
-        name: "&e公会邀请"
-        lore:
-          - "&7状态: &a开启"
+        slot: 28
       notify_toggle:
         material: NOTE_BLOCK
-        name: "&e上下线通知"
-        lore:
-          - "&7状态: &a开启"
+        slot: 34
+      bank:
+        material: GOLD_INGOT
+        slot: 22
     
-    # 官员界面
+    # 管理员界面
     officer:
       manage:
         material: COMMAND_BLOCK
-        name: "&c管理公会"
-        lore:
-          - "&7点击管理公会"
-          - "&7重命名公会"
-          - "&7修改标签"
-          - "&7升级公会"
-          - "&7解散公会"
+        slot: 37
     
     # 会长界面
     owner:
       manage:
         material: COMMAND_BLOCK
-        name: "&c管理公会"
-        lore:
-          - "&7点击管理公会"
-          - "&7重命名公会"
-          - "&7修改标签"
-          - "&7升级公会"
-          - "&7解散公会"
+        slot: 37
+      upgrade:
+        material: EMERALD
+        slot: 19
+      buy_exp:
+        material: EXPERIENCE_BOTTLE
+        slot: 25
   
   # 颜色设置
   colors:
@@ -117,3 +81,365 @@ gui:
     member: "&a"
     online: "&a"
     offline: "&c"
+
+# 多语言支持
+messages:
+  # 简体中文
+  zh_cn:
+    title:
+      main: "&6公会系统"
+      no_guild: "&6公会系统"
+      all_guilds: "&6所有公会"
+      member: "&6公会: &e{name}"
+      officer: "&6公会管理: &e{name}"
+      owner: "&6公会会长: &e{name}"
+      bank: "&6公会银行: &e{name}"
+    
+    items:
+      no_guild:
+        barrier:
+          name: "&c你还没有公会"
+          lore:
+            - "&7创建或加入一个公会来开始"
+        create:
+          name: "&a创建公会"
+          lore:
+            - "&7点击创建一个新的公会"
+        view_all:
+          name: "&e查看所有公会"
+          lore:
+            - "&7点击查看服务器上的所有公会"
+      
+      all_guilds:
+        guild_item:
+          lore:
+            - "&7等级: &e{level}"
+            - "&7成员: &e{members}/{max}"
+            - "&7经验: &e{exp}"
+            - "&7标签: &e{tag}"
+        back:
+          name: "&c返回"
+          lore:
+            - "&7返回主菜单"
+      
+      member:
+        info:
+          name: "&e公会信息"
+          lore:
+            - "&7等级: &e{level}"
+            - "&7成员: &e{members}/{max}"
+            - "&7经验: &e{exp}/{required}"
+        members:
+          name: "&e公会成员"
+          lore:
+            - "&7点击查看所有公会成员"
+        settings:
+          name: "&e个人设置"
+          lore:
+            - "&7点击修改个人设置"
+        leave:
+          name: "&c离开公会"
+          lore:
+            - "&7点击离开当前公会"
+        invite_toggle:
+          name: "&e公会邀请"
+          lore:
+            - "&7状态: &a开启"
+        notify_toggle:
+          name: "&e上下线通知"
+          lore:
+            - "&7状态: &a开启"
+        bank:
+          name: "&6公会银行"
+          lore:
+            - "&7存入或取出资金"
+      
+      officer:
+        manage:
+          name: "&c管理公会"
+          lore:
+            - "&7点击管理公会"
+            - "&7重命名公会"
+            - "&7修改标签"
+            - "&7升级公会"
+            - "&7解散公会"
+      
+      owner:
+        manage:
+          name: "&c管理公会"
+          lore:
+            - "&7点击管理公会"
+            - "&7重命名公会"
+            - "&7修改标签"
+            - "&7升级公会"
+            - "&7解散公会"
+        upgrade:
+          name: "&a升级公会"
+          lore:
+            - "&7使用货币升级公会"
+            - "&7当前等级: &e{level}"
+            - "&7所需: &e{cost}"
+        buy_exp:
+          name: "&b购买经验"
+          lore:
+            - "&7使用货币购买经验"
+            - "&7获得: &e{exp} 经验"
+            - "&7所需: &e{cost}"
+      
+      bank:
+        balance:
+          name: "&e当前余额"
+          lore: "&f余额: &a{balance}"
+          slot: 13
+        deposit:
+          name: "&a存入资金"
+          lore: "&f点击存入资金到公会银行"
+          slot: 20
+        withdraw:
+          name: "&c取出资金"
+          lore: "&f点击从公会银行取出资金"
+          slot: 24
+        back:
+          name: "&c返回"
+          lore: "&7返回主菜单"
+          slot: 40
+  
+  # 繁体中文
+  zh_tw:
+    title:
+      main: "&6公會系統"
+      no_guild: "&6公會系統"
+      all_guilds: "&6所有公會"
+      member: "&6公會: &e{name}"
+      officer: "&6公會管理: &e{name}"
+      owner: "&6公會會長: &e{name}"
+      bank: "&6公會銀行: &e{name}"
+    
+    items:
+      no_guild:
+        barrier:
+          name: "&c你還沒有公會"
+          lore:
+            - "&7創建或加入一個公會來開始"
+        create:
+          name: "&a創建公會"
+          lore:
+            - "&7點擊創建一個新的公會"
+        view_all:
+          name: "&e查看所有公會"
+          lore:
+            - "&7點擊查看服務器上的所有公會"
+      
+      all_guilds:
+        guild_item:
+          lore:
+            - "&7等級: &e{level}"
+            - "&7成員: &e{members}/{max}"
+            - "&7經驗: &e{exp}"
+            - "&7標籤: &e{tag}"
+        back:
+          name: "&c返回"
+          lore:
+            - "&7返回主選單"
+      
+      member:
+        info:
+          name: "&e公會信息"
+          lore:
+            - "&7等級: &e{level}"
+            - "&7成員: &e{members}/{max}"
+            - "&7經驗: &e{exp}/{required}"
+        members:
+          name: "&e公會成員"
+          lore:
+            - "&7點擊查看所有公會成員"
+        settings:
+          name: "&e個人設置"
+          lore:
+            - "&7點擊修改個人設置"
+        leave:
+          name: "&c離開公會"
+          lore:
+            - "&7點擊離開當前公會"
+        invite_toggle:
+          name: "&e公會邀請"
+          lore:
+            - "&7狀態: &a開啟"
+        notify_toggle:
+          name: "&e上下線通知"
+          lore:
+            - "&7狀態: &a開啟"
+        bank:
+          name: "&6公會銀行"
+          lore:
+            - "&7存入或取出資金"
+      
+      officer:
+        manage:
+          name: "&c管理公會"
+          lore:
+            - "&7點擊管理公會"
+            - "&7重命名公會"
+            - "&7修改標籤"
+            - "&7升級公會"
+            - "&7解散公會"
+      
+      owner:
+        manage:
+          name: "&c管理公會"
+          lore:
+            - "&7點擊管理公會"
+            - "&7重命名公會"
+            - "&7修改標籤"
+            - "&7升級公會"
+            - "&7解散公會"
+        upgrade:
+          name: "&a升級公會"
+          lore:
+            - "&7使用貨幣升級公會"
+            - "&7當前等級: &e{level}"
+            - "&7所需: &e{cost}"
+        buy_exp:
+          name: "&b購買經驗"
+          lore:
+            - "&7使用貨幣購買經驗"
+            - "&7獲得: &e{exp} 經驗"
+            - "&7所需: &e{cost}"
+      
+      bank:
+        balance:
+          name: "&e當前餘額"
+          lore: "&f餘額: &a{balance}"
+          slot: 13
+        deposit:
+          name: "&a存入資金"
+          lore: "&f點擊存入資金到公會銀行"
+          slot: 20
+        withdraw:
+          name: "&c取出資金"
+          lore: "&f點擊從公會銀行取出資金"
+          slot: 24
+        back:
+          name: "&c返回"
+          lore: "&7返回主選單"
+          slot: 40
+  
+  # 英语
+  en_us:
+    title:
+      main: "&6Guild System"
+      no_guild: "&6Guild System"
+      all_guilds: "&6All Guilds"
+      member: "&6Guild: &e{name}"
+      officer: "&6Guild Management: &e{name}"
+      owner: "&6Guild Owner: &e{name}"
+      bank: "&6Guild Bank: &e{name}"
+    
+    items:
+      no_guild:
+        barrier:
+          name: "&cYou don't have a guild yet"
+          lore:
+            - "&7Create or join a guild to get started"
+        create:
+          name: "&aCreate Guild"
+          lore:
+            - "&7Click to create a new guild"
+        view_all:
+          name: "&eView All Guilds"
+          lore:
+            - "&7Click to view all guilds on the server"
+      
+      all_guilds:
+        guild_item:
+          lore:
+            - "&7Level: &e{level}"
+            - "&7Members: &e{members}/{max}"
+            - "&7Experience: &e{exp}"
+            - "&7Tag: &e{tag}"
+        back:
+          name: "&cBack"
+          lore:
+            - "&7Return to main menu"
+      
+      member:
+        info:
+          name: "&eGuild Info"
+          lore:
+            - "&7Level: &e{level}"
+            - "&7Members: &e{members}/{max}"
+            - "&7Experience: &e{exp}/{required}"
+        members:
+          name: "&eGuild Members"
+          lore:
+            - "&7Click to view all guild members"
+        settings:
+          name: "&ePersonal Settings"
+          lore:
+            - "&7Click to modify personal settings"
+        leave:
+          name: "&cLeave Guild"
+          lore:
+            - "&7Click to leave current guild"
+        invite_toggle:
+          name: "&eGuild Invites"
+          lore:
+            - "&7Status: &aEnabled"
+        notify_toggle:
+          name: "&eOnline Notifications"
+          lore:
+            - "&7Status: &aEnabled"
+        bank:
+          name: "&6Guild Bank"
+          lore:
+            - "&7Deposit or withdraw funds"
+      
+      officer:
+        manage:
+          name: "&cManage Guild"
+          lore:
+            - "&7Click to manage guild"
+            - "&7Rename guild"
+            - "&7Modify tag"
+            - "&7Upgrade guild"
+            - "&7Disband guild"
+      
+      owner:
+        manage:
+          name: "&cManage Guild"
+          lore:
+            - "&7Click to manage guild"
+            - "&7Rename guild"
+            - "&7Modify tag"
+            - "&7Upgrade guild"
+            - "&7Disband guild"
+        upgrade:
+          name: "&aUpgrade Guild"
+          lore:
+            - "&7Use currency to upgrade guild"
+            - "&7Current level: &e{level}"
+            - "&7Required: &e{cost}"
+        buy_exp:
+          name: "&bBuy Experience"
+          lore:
+            - "&7Use currency to buy experience"
+            - "&7Get: &e{exp} experience"
+            - "&7Required: &e{cost}"
+      
+      bank:
+        balance:
+          name: "&eCurrent Balance"
+          lore: "&fBalance: &a{balance}"
+          slot: 13
+        deposit:
+          name: "&aDeposit Funds"
+          lore: "&fClick to deposit funds to guild bank"
+          slot: 20
+        withdraw:
+          name: "&cWithdraw Funds"
+          lore: "&fClick to withdraw funds from guild bank"
+          slot: 24
+        back:
+          name: "&cBack"
+          lore: "&7Return to main menu"
+          slot: 40

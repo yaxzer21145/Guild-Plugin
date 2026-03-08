@@ -3,12 +3,16 @@ package com.guild;
 import com.guild.commands.GuildCommand;
 import com.guild.commands.GuildChatCommand;
 import com.guild.commands.GuildGUICommand;
+import com.guild.config.CurrencyConfig;
+import com.guild.config.FeatureConfig;
 import com.guild.config.GUIConfig;
+import com.guild.currency.GuildCurrency;
 import com.guild.database.DatabaseManager;
 import com.guild.guild.GuildManager;
 import com.guild.listeners.ChatInputListener;
 import com.guild.listeners.InventoryListener;
 import com.guild.listeners.PlayerListener;
+import com.guild.utils.LangUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -27,6 +31,9 @@ public class GuildPlugin extends JavaPlugin {
     private DatabaseManager databaseManager;
     private GuildManager guildManager;
     private GUIConfig guiConfig;
+    private FeatureConfig featureConfig;
+    private CurrencyConfig currencyConfig;
+    private GuildCurrency guildCurrency;
     private Map<String, String> messages;
     private String currentLanguage;
     
@@ -45,9 +52,15 @@ public class GuildPlugin extends JavaPlugin {
         databaseManager.initialize();
         
         guiConfig = new GUIConfig(this);
+        featureConfig = new FeatureConfig(this);
+        currencyConfig = new CurrencyConfig(this);
+        guildCurrency = new GuildCurrency(this);
+        
+        LangUtils.initialize(this);
         
         registerCommands();
         registerListeners();
+        registerPlaceholderAPI();
         
         printEnableMessage();
     }
@@ -85,7 +98,9 @@ public class GuildPlugin extends JavaPlugin {
                 langFile.getParentFile().mkdirs();
             }
             
-            Files.copy(inputStream, langFile.toPath(), StandardCopyOption.REPLACE_EXISTING);
+            if (!langFile.exists()) {
+                Files.copy(inputStream, langFile.toPath(), StandardCopyOption.REPLACE_EXISTING);
+            }
             inputStream.close();
             
             String content = new String(Files.readAllBytes(langFile.toPath()));
@@ -122,7 +137,7 @@ public class GuildPlugin extends JavaPlugin {
     }
     
     private void saveLanguageFiles() {
-        String[] languages = {"en_US", "zh_cn", "zh_tw", "zh_hk", "de_de", "fr_fr", "ja_jp"};
+        String[] languages = {"en_US", "zh_cn", "zh_tw"};
         
         for (String lang : languages) {
             try {
@@ -135,12 +150,10 @@ public class GuildPlugin extends JavaPlugin {
                         langFile.getParentFile().mkdirs();
                     }
                     
-                    if (langFile.exists()) {
-                        getLogger().warning("Could not save " + lang + ".yml to " + langFile.getPath() + " because " + lang + ".yml already exists.");
-                    } else {
+                    if (!langFile.exists()) {
                         Files.copy(inputStream, langFile.toPath(), StandardCopyOption.REPLACE_EXISTING);
-                        inputStream.close();
                     }
+                    inputStream.close();
                 }
             } catch (IOException e) {
                 getLogger().warning("Could not save language file: " + lang + ".yml");
@@ -150,7 +163,6 @@ public class GuildPlugin extends JavaPlugin {
     
     private void printEnableMessage() {
         String version = getDescription().getVersion();
-        String author = getDescription().getAuthors().toString();
         
         Bukkit.getConsoleSender().sendMessage("");
         Bukkit.getConsoleSender().sendMessage(ChatColor.GREEN + "========================================");
@@ -167,6 +179,8 @@ public class GuildPlugin extends JavaPlugin {
         Bukkit.getConsoleSender().sendMessage(ChatColor.GREEN + "  " + messages.getOrDefault("plugin.enabled", "GuildPlugin has been enabled!"));
         Bukkit.getConsoleSender().sendMessage(ChatColor.GRAY + "  " + messages.getOrDefault("plugin.author", "By GuildPlugin"));
         Bukkit.getConsoleSender().sendMessage(ChatColor.GRAY + "  Loaded " + guildManager.getGuilds().size() + " guilds");
+        Bukkit.getConsoleSender().sendMessage(ChatColor.GRAY + "  Server Type: " + com.guild.utils.VersionCompat.getServerType());
+        Bukkit.getConsoleSender().sendMessage(ChatColor.GRAY + "  Minecraft Version: " + com.guild.utils.VersionCompat.getVersion());
         Bukkit.getConsoleSender().sendMessage(ChatColor.GREEN + "========================================");
         Bukkit.getConsoleSender().sendMessage("");
     }
@@ -192,6 +206,13 @@ public class GuildPlugin extends JavaPlugin {
         Bukkit.getPluginManager().registerEvents(new ChatInputListener(this), this);
     }
     
+    private void registerPlaceholderAPI() {
+        if (Bukkit.getPluginManager().isPluginEnabled("PlaceholderAPI")) {
+            new com.guild.papi.GuildPlaceholderExpansion(this).register();
+            getLogger().info("PlaceholderAPI expansion registered!");
+        }
+    }
+    
     public static GuildPlugin getInstance() {
         return instance;
     }
@@ -206,5 +227,38 @@ public class GuildPlugin extends JavaPlugin {
     
     public GUIConfig getGUIConfig() {
         return guiConfig;
+    }
+    
+    public FeatureConfig getFeatureConfig() {
+        return featureConfig;
+    }
+    
+    public CurrencyConfig getCurrencyConfig() {
+        return currencyConfig;
+    }
+    
+    public GuildCurrency getGuildCurrency() {
+        return guildCurrency;
+    }
+    
+    public String getMessage(String key) {
+        String message = messages.get(key);
+        if (message == null) {
+            message = messages.get("messages." + key);
+        }
+        if (message == null) {
+            message = messages.get("guild." + key);
+        }
+        return message != null ? message : key;
+    }
+    
+    public String getMessage(String key, String... replacements) {
+        String message = getMessage(key);
+        for (int i = 0; i < replacements.length; i += 2) {
+            if (i + 1 < replacements.length) {
+                message = message.replace(replacements[i], replacements[i + 1]);
+            }
+        }
+        return message;
     }
 }

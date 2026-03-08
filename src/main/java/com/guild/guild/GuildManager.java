@@ -1,6 +1,7 @@
 package com.guild.guild;
 
 import com.guild.GuildPlugin;
+import com.guild.currency.GuildCurrency;
 import org.bukkit.entity.Player;
 
 import java.util.*;
@@ -14,6 +15,7 @@ public class GuildManager {
     private final Map<String, List<GuildRequest>> requests;
     private final Map<UUID, GuildInvite> invites;
     private final Map<UUID, PlayerSettings> playerSettings;
+    private final Map<UUID, Long> playerGuildCurrency;
     
     public GuildManager(GuildPlugin plugin) {
         this.plugin = plugin;
@@ -22,6 +24,7 @@ public class GuildManager {
         this.requests = new ConcurrentHashMap<>();
         this.invites = new ConcurrentHashMap<>();
         this.playerSettings = new ConcurrentHashMap<>();
+        this.playerGuildCurrency = new ConcurrentHashMap<>();
     }
     
     public Guild createGuild(String name, Player owner) {
@@ -206,11 +209,11 @@ public class GuildManager {
     }
     
     public Map<String, Guild> getGuilds() {
-        return guilds;
+        return new java.util.HashMap<>(guilds);
     }
     
     public Map<UUID, String> getPlayerGuilds() {
-        return playerGuilds;
+        return new java.util.HashMap<>(playerGuilds);
     }
     
     public boolean sendInvite(String guildName, UUID inviterUuid, UUID targetUuid, String targetName) {
@@ -271,6 +274,42 @@ public class GuildManager {
         return settings.isNotifyOnlineStatus();
     }
     
+    public long getGuildBalance(String guildName) {
+        Guild guild = guilds.get(guildName.toLowerCase());
+        if (guild == null) return 0;
+        return guild.getBank().getBalance();
+    }
+    
+    public boolean depositToBank(String guildName, UUID playerUuid, long amount) {
+        Guild guild = guilds.get(guildName.toLowerCase());
+        if (guild == null) return false;
+        
+        if (!guild.isMember(playerUuid)) return false;
+        
+        if (guild.getBank().deposit(amount)) {
+            guild.getBank().addDepositRecord(plugin.getServer().getOfflinePlayer(playerUuid).getName(), amount);
+            plugin.getDatabaseManager().saveGuild(guild);
+            return true;
+        }
+        return false;
+    }
+    
+    public boolean withdrawFromBank(String guildName, UUID playerUuid, long amount) {
+        Guild guild = guilds.get(guildName.toLowerCase());
+        if (guild == null) return false;
+        
+        if (!guild.isMember(playerUuid)) return false;
+        
+        if (!guild.hasPermission(playerUuid, "withdraw")) return false;
+        
+        if (guild.getBank().withdraw(amount)) {
+            guild.getBank().addWithdrawRecord(plugin.getServer().getOfflinePlayer(playerUuid).getName(), amount);
+            plugin.getDatabaseManager().saveGuild(guild);
+            return true;
+        }
+        return false;
+    }
+    
     public static class GuildInvite {
         private final String guildName;
         private final UUID inviterUuid;
@@ -329,5 +368,66 @@ public class GuildManager {
         public long getRequestTime() {
             return requestTime;
         }
+    }
+    
+    public long getPlayerGuildCurrency(UUID uuid) {
+        return playerGuildCurrency.getOrDefault(uuid, 0L);
+    }
+    
+    public boolean depositPlayerGuildCurrency(UUID uuid, long amount) {
+        if (amount <= 0) return false;
+        playerGuildCurrency.put(uuid, playerGuildCurrency.getOrDefault(uuid, 0L) + amount);
+        return true;
+    }
+    
+    public boolean withdrawPlayerGuildCurrency(UUID uuid, long amount) {
+        long current = playerGuildCurrency.getOrDefault(uuid, 0L);
+        if (current < amount || amount <= 0) return false;
+        playerGuildCurrency.put(uuid, current - amount);
+        return true;
+    }
+    
+    public boolean setPlayerGuildCurrency(UUID uuid, long amount) {
+        if (amount < 0) return false;
+        playerGuildCurrency.put(uuid, amount);
+        return true;
+    }
+    
+    public boolean upgradeGuild(String guildName, UUID playerUuid) {
+        Guild guild = guilds.get(guildName.toLowerCase());
+        if (guild == null) return false;
+        
+        if (!guild.getOwner().equals(playerUuid)) return false;
+        if (guild.getLevel() >= 100) return false;
+        
+        GuildCurrency.CurrencyType currencyType = plugin.getCurrencyConfig().getCurrencyType();
+        long cost = plugin.getCurrencyConfig().getLevelUpCost();
+        
+        if (!plugin.getGuildCurrency().withdraw(playerUuid, cost, currencyType)) {
+            return false;
+        }
+        
+        guild.setLevel(guild.getLevel() + 1);
+        plugin.getDatabaseManager().saveGuild(guild);
+        return true;
+    }
+    
+    public boolean addExperienceWithCurrency(String guildName, UUID playerUuid) {
+        Guild guild = guilds.get(guildName.toLowerCase());
+        if (guild == null) return false;
+        
+        if (!guild.isMember(playerUuid)) return false;
+        
+        GuildCurrency.CurrencyType currencyType = plugin.getCurrencyConfig().getCurrencyType();
+        long cost = plugin.getCurrencyConfig().getExperienceCost();
+        int expAmount = plugin.getCurrencyConfig().getExperienceAmount();
+        
+        if (!plugin.getGuildCurrency().withdraw(playerUuid, cost, currencyType)) {
+            return false;
+        }
+        
+        guild.addExperience(expAmount);
+        plugin.getDatabaseManager().saveGuild(guild);
+        return true;
     }
 }

@@ -8,7 +8,6 @@ import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.SkullMeta;
 
 import java.lang.reflect.Method;
-import java.util.List;
 import java.util.UUID;
 
 public class VersionCompat {
@@ -17,6 +16,10 @@ public class VersionCompat {
     private static final int MAJOR_VERSION;
     private static final int MINOR_VERSION;
     private static final boolean IS_LEGACY;
+    private static final String SERVER_TYPE;
+    private static final boolean IS_PURPUR;
+    private static final boolean IS_FOLIA;
+    private static final boolean IS_LEAVES;
     
     private static Material PLAYER_HEAD_MATERIAL;
     private static Material BARRIER_MATERIAL;
@@ -33,6 +36,10 @@ public class VersionCompat {
     private static Material COMMAND_BLOCK_MATERIAL;
     private static Material GOLDEN_HELMET_MATERIAL;
     private static Material IRON_HELMET_MATERIAL;
+    private static Material GOLD_INGOT_MATERIAL;
+    private static Material EMERALD_MATERIAL;
+    private static Material GRAY_STAINED_GLASS_PANE_MATERIAL;
+    private static Material EXPERIENCE_BOTTLE_MATERIAL;
     
     static {
         String packageName = Bukkit.getServer().getClass().getPackage().getName();
@@ -43,6 +50,11 @@ public class VersionCompat {
         MINOR_VERSION = parts.length > 2 ? Integer.parseInt(parts[2].replace("R", "")) : 0;
         
         IS_LEGACY = MAJOR_VERSION < 13;
+        
+        SERVER_TYPE = detectServerType();
+        IS_PURPUR = SERVER_TYPE.equals("PURPUR");
+        IS_FOLIA = SERVER_TYPE.equals("FOLIA");
+        IS_LEAVES = SERVER_TYPE.equals("LEAVES");
         
         initializeMaterials();
     }
@@ -64,6 +76,10 @@ public class VersionCompat {
             COMMAND_BLOCK_MATERIAL = getMaterialSafe("COMMAND", "COMMAND_BLOCK");
             GOLDEN_HELMET_MATERIAL = getMaterialSafe("GOLD_HELMET", "GOLDEN_HELMET");
             IRON_HELMET_MATERIAL = getMaterialSafe("IRON_HELMET", "IRON_BLOCK");
+            GOLD_INGOT_MATERIAL = getMaterialSafe("GOLD_INGOT", "GOLD_NUGGET");
+            EMERALD_MATERIAL = getMaterialSafe("EMERALD", "DIAMOND");
+            GRAY_STAINED_GLASS_PANE_MATERIAL = getMaterialSafe("STAINED_GLASS_PANE", "GLASS_PANE");
+            EXPERIENCE_BOTTLE_MATERIAL = getMaterialSafe("EXP_BOTTLE", "GLASS_BOTTLE");
         } else {
             PLAYER_HEAD_MATERIAL = Material.PLAYER_HEAD;
             BARRIER_MATERIAL = Material.BARRIER;
@@ -80,6 +96,33 @@ public class VersionCompat {
             COMMAND_BLOCK_MATERIAL = Material.COMMAND_BLOCK;
             GOLDEN_HELMET_MATERIAL = Material.GOLDEN_HELMET;
             IRON_HELMET_MATERIAL = Material.IRON_HELMET;
+            GOLD_INGOT_MATERIAL = Material.GOLD_INGOT;
+            EMERALD_MATERIAL = Material.EMERALD;
+            GRAY_STAINED_GLASS_PANE_MATERIAL = Material.GRAY_STAINED_GLASS_PANE;
+            EXPERIENCE_BOTTLE_MATERIAL = Material.EXPERIENCE_BOTTLE;
+        }
+    }
+    
+    private static String detectServerType() {
+        try {
+            // 检查 Purpur
+            Class.forName("org.purpurmc.purpur.PurpurServer");
+            return "PURPUR";
+        } catch (ClassNotFoundException e) {
+            // 检查 Folia
+            try {
+                Class.forName("io.papermc.paper.threadedregions.RegionizedServer");
+                return "FOLIA";
+            } catch (ClassNotFoundException ex) {
+                // 检查 Leaves
+                try {
+                    Class.forName("net.leavesmc.leaves.LeavesServer");
+                    return "LEAVES";
+                } catch (ClassNotFoundException exc) {
+                    // 默认服务器类型
+                    return "SPIGOT";
+                }
+            }
         }
     }
     
@@ -119,6 +162,22 @@ public class VersionCompat {
     
     public static boolean isVersionBetween(int minMajor, int maxMajor) {
         return MAJOR_VERSION >= minMajor && MAJOR_VERSION <= maxMajor;
+    }
+    
+    public static String getServerType() {
+        return SERVER_TYPE;
+    }
+    
+    public static boolean isPurpur() {
+        return IS_PURPUR;
+    }
+    
+    public static boolean isFolia() {
+        return IS_FOLIA;
+    }
+    
+    public static boolean isLeaves() {
+        return IS_LEAVES;
     }
     
     public static Material getPlayerHeadMaterial() {
@@ -179,6 +238,22 @@ public class VersionCompat {
     
     public static Material getIronHelmetMaterial() {
         return IRON_HELMET_MATERIAL;
+    }
+    
+    public static Material getGoldIngotMaterial() {
+        return GOLD_INGOT_MATERIAL;
+    }
+    
+    public static Material getEmeraldMaterial() {
+        return EMERALD_MATERIAL;
+    }
+    
+    public static Material getGrayStainedGlassPaneMaterial() {
+        return GRAY_STAINED_GLASS_PANE_MATERIAL;
+    }
+    
+    public static Material getExperienceBottleMaterial() {
+        return EXPERIENCE_BOTTLE_MATERIAL;
     }
     
     public static ItemStack createPlayerHead(UUID uuid, String name, String... lore) {

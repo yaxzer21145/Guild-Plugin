@@ -1,8 +1,9 @@
 name: Guild
-version: 2.0.0
+version: 2.0.1
 main: com.guild.GuildPlugin
 author: ya_xzer21145
 description: 一个功能完善的公会插件，支持1.8.8至1.21.1所有版本，兼容Spigot、Paper等服务端核心
+api-version: 1.13
 
 commands:
   guild:
@@ -16,6 +17,11 @@ commands:
   guildgui:
     description: 打开公会GUI界面
     usage: /guildgui
+
+  guildbank:
+    description: 公会银行指令
+    aliases: [gb]
+    usage: /guildbank
 
 permissions:
   guild.*:

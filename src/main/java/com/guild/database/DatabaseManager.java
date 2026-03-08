@@ -62,6 +62,7 @@ public class DatabaseManager {
                     "daily_contribution INTEGER," +
                     "muted INTEGER," +
                     "muted_until INTEGER," +
+                    "nickname TEXT," +
                     "PRIMARY KEY (guild_name, uuid)," +
                     "FOREIGN KEY (guild_name) REFERENCES guilds(name)" +
                     ")");
@@ -78,6 +79,11 @@ public class DatabaseManager {
                     "uuid TEXT PRIMARY KEY," +
                     "guild_invites INTEGER," +
                     "join_notifications INTEGER" +
+                    ")");
+            
+            stmt.execute("CREATE TABLE IF NOT EXISTS guild_banks (" +
+                    "guild_name TEXT PRIMARY KEY," +
+                    "balance INTEGER" +
                     ")");
         }
     }
@@ -114,6 +120,7 @@ public class DatabaseManager {
                 
                 loadGuildMembers(guild);
                 loadGuildPermissions(guild);
+                loadGuildBank(guild);
                 
                 guilds.put(name.toLowerCase(), guild);
             }
@@ -145,12 +152,16 @@ public class DatabaseManager {
             long dailyContribution = rs.getLong("daily_contribution");
             boolean muted = rs.getBoolean("muted");
             long mutedUntil = rs.getLong("muted_until");
+            String nickname = rs.getString("nickname");
             
             GuildMember member = new GuildMember(uuid, role);
             member.setTotalContribution(totalContribution);
             member.setDailyContribution(dailyContribution);
             if (muted) {
                 member.mute(mutedUntil - System.currentTimeMillis());
+            }
+            if (nickname != null && !nickname.isEmpty()) {
+                member.setNickname(nickname);
             }
             
             guild.getMembers().put(uuid, member);
@@ -174,6 +185,21 @@ public class DatabaseManager {
                     level == 1 ? GuildPermission.MEMBER : 
                     level == 2 ? GuildPermission.OFFICER : 
                     GuildPermission.OWNER);
+        }
+        
+        rs.close();
+        stmt.close();
+    }
+    
+    private void loadGuildBank(Guild guild) throws SQLException {
+        PreparedStatement stmt = connection.prepareStatement(
+                "SELECT * FROM guild_banks WHERE guild_name = ?");
+        stmt.setString(1, guild.getName());
+        ResultSet rs = stmt.executeQuery();
+        
+        if (rs.next()) {
+            long balance = rs.getLong("balance");
+            guild.getBank().setBalance(balance);
         }
         
         rs.close();
@@ -210,7 +236,7 @@ public class DatabaseManager {
             for (GuildMember member : guild.getMembers().values()) {
                 PreparedStatement memberStmt = connection.prepareStatement(
                         "INSERT INTO guild_members (guild_name, uuid, role, joined_time, " +
-                        "total_contribution, daily_contribution, muted, muted_until) VALUES (?, ?, ?, ?, ?, ?, ?, ?)");
+                        "total_contribution, daily_contribution, muted, muted_until, nickname) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)");
                 
                 memberStmt.setString(1, guild.getName());
                 memberStmt.setString(2, member.getUuid().toString());
@@ -221,9 +247,17 @@ public class DatabaseManager {
                 memberStmt.setBoolean(7, member.isMuted());
                 memberStmt.setLong(8, member.isMuted() ? 
                         System.currentTimeMillis() + 86400000 : 0);
+                memberStmt.setString(9, member.getNickname());
                 memberStmt.executeUpdate();
                 memberStmt.close();
             }
+            
+            PreparedStatement bankStmt = connection.prepareStatement(
+                    "INSERT OR REPLACE INTO guild_banks (guild_name, balance) VALUES (?, ?)");
+            bankStmt.setString(1, guild.getName());
+            bankStmt.setLong(2, guild.getBank().getBalance());
+            bankStmt.executeUpdate();
+            bankStmt.close();
             
             connection.commit();
             connection.setAutoCommit(true);

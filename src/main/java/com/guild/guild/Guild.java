@@ -21,6 +21,7 @@ public class Guild {
     private long createdTime;
     private Map<UUID, GuildMember> members;
     private Map<String, GuildPermission> permissions;
+    private GuildBank bank;
     
     public Guild(String name, UUID owner) {
         this.name = name;
@@ -40,6 +41,7 @@ public class Guild {
         members.put(owner, ownerMember);
         
         initializeDefaultPermissions();
+        this.bank = new GuildBank();
     }
     
     private void initializeDefaultPermissions() {
@@ -51,6 +53,7 @@ public class Guild {
         permissions.put("motd", GuildPermission.OFFICER);
         permissions.put("settings", GuildPermission.OFFICER);
         permissions.put("disband", GuildPermission.OWNER);
+        permissions.put("withdraw", GuildPermission.OFFICER);
     }
     
     public int getMaxMembers() {
@@ -191,6 +194,14 @@ public class Guild {
     
     public Map<String, GuildPermission> getPermissions() {
         return permissions;
+    }
+    
+    public GuildBank getBank() {
+        return bank;
+    }
+    
+    public void setBank(GuildBank bank) {
+        this.bank = bank;
     }
     
     public void broadcast(String message) {

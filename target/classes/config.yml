@@ -3,6 +3,46 @@
 # 语言设置
 language: zh_cn
 
+# 功能开关
+features:
+  # 是否启用公会银行功能
+  bank-enabled: true
+  # 是否启用公会聊天
+  chat-enabled: true
+  # 是否启用公会经验系统
+  experience-enabled: true
+  # 是否启用公会等级系统
+  level-enabled: true
+  # 是否启用公会公告(MOTD)
+  motd-enabled: true
+  # 是否启用公会标签
+  tag-enabled: true
+  # 是否启用成员昵称
+  nickname-enabled: true
+  # 是否启用上下线通知
+  notification-enabled: true
+  # 是否启用公会GUI
+  gui-enabled: true
+
+# 货币设置
+currency:
+  # 货币类型: DEFAULT(公会币), VAULT(Vault经济), PLAYERPOINTS(PlayerPoints积分)
+  type: DEFAULT
+  # 升级所需货币数量
+  level_up_cost: 100000
+  # 购买经验所需货币数量
+  experience_cost: 5000
+  # 购买经验获得的经验值
+  experience_amount: 50
+  # 公会币名称
+  guild_currency_name: "公会币"
+  # Vault货币名称
+  vault_currency_name: "金币"
+  # PlayerPoints货币名称
+  playerpoints_currency_name: "积分"
+  # 是否启用银行货币功能
+  bank_enabled: true
+
 # 公会设置
 guild:
   # 最大公会等级

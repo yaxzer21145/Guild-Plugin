@@ -1,66 +1,243 @@
 # Guild插件消息配置文件
 
-# 公会消息
-guild:
-  created: "&a成功创建公会: {name}"
-  created_with_tag: "&a成功创建公会: {name}&a, 标签: {tag}"
-  deleted: "&c公会已解散"
-  joined: "&a你已加入公会: {name}"
-  left: "&a你已离开公会"
-  already_in_guild: "&c你已经在公会中了"
-  not_in_guild: "&c你不在任何公会中"
-  no_permission: "&c你没有权限执行此操作"
-  guild_not_found: "&c未找到公会: {name}"
-  player_not_found: "&c未找到玩家: {name}"
-  name_exists: "&c公会名称已存在"
-  name_too_short: "&c公会名称太短，最少需要 {min} 个字符"
-  name_too_long: "&c公会名称太长，最多 {max} 个字符"
-  tag_too_long: "&c标签太长，最多 {max} 个字符"
-  not_enough_money: "&c创建公会需要 {cost} 金币/点数"
-  
-# 成员消息
-member:
-  promoted: "&a你已被提升为 {role}"
-  demoted: "&a你已被降级为 {role}"
-  kicked: "&c你已被踢出公会"
-  promoted_other: "&a{player} 已被提升为 {role}"
-  demoted_other: "&a{player} 已被降级为 {role}"
-  kicked_other: "&a{player} 已被踢出公会"
-  transferred: "&a公会会长已转让给 {player}"
-  
-# 聊天消息
-chat:
-  format: "&8[&6公会&8] &f{player}&7: &f{message}"
-  officer_format: "&8[&c管理&8] &f{player}&7: &f{message}"
-  
-# GUI消息
-gui:
-  no_guild: "&c你还没有公会"
-  no_guild_desc: "&7创建或加入一个公会来开始"
-  create_guild: "&a创建公会"
-  create_guild_desc: "&7点击创建一个新的公会"
-  view_all_guilds: "&e查看所有公会"
-  view_all_guilds_desc: "&7点击查看服务器上的所有公会"
-  back: "&c返回"
-  back_desc: "&7返回主菜单"
-  
-# 错误消息
-error:
-  command_only_player: "&c此命令只能由玩家执行"
-  invalid_arguments: "&c参数错误"
-  guild_not_found: "&c公会不存在"
-  player_not_in_guild: "&c玩家不在公会中"
-  cannot_leave_as_owner: "&c会长不能离开公会，请先转让会长或解散公会"
-  cannot_kick_higher_role: "&c你不能踢出比你职位高的成员"
-  cannot_promote_higher_role: "&c你不能提升比你职位高的成员"
-  cannot_demote_higher_role: "&c你不能降级比你职位高的成员"
-  
-# 成功消息
-success:
-  tag_set: "&a公会标签已设置为: {tag}"
-  tag_color_set: "&a公会标签颜色已设置为: {color}"
-  motd_set: "&a公会公告已设置为: {motd}"
-  motd_cleared: "&a公会公告已清除"
-  settings_updated: "&a设置已更新"
-  reloaded: "&a配置已重载"
-  database_reloaded: "&a数据库已重载"
+# 语言设置
+language: zh_cn
+
+# 多语言支持
+messages:
+  # 简体中文
+  zh_cn:
+    guild:
+      created: "&a成功创建公会: {name}"
+      created_with_tag: "&a成功创建公会: {name}&a, 标签: {tag}"
+      deleted: "&c公会已解散"
+      joined: "&a你已加入公会: {name}"
+      left: "&a你已离开公会"
+      already_in_guild: "&c你已经在公会中了"
+      not_in_guild: "&c你不在任何公会中"
+      no_permission: "&c你没有权限执行此操作"
+      guild_not_found: "&c未找到公会: {name}"
+      player_not_found: "&c未找到玩家: {name}"
+      name_exists: "&c公会名称已存在"
+      name_too_short: "&c公会名称太短，最少需要 {min} 个字符"
+      name_too_long: "&c公会名称太长，最多 {max} 个字符"
+      tag_too_long: "&c标签太长，最多 {max} 个字符"
+      not_enough_money: "&c创建公会需要 {cost} 金币/点数"
+      level_up: "&a公会升级成功！当前等级: {level}"
+      experience_purchased: "&a成功购买 {exp} 经验"
+      upgrade_failed: "&c升级失败，余额不足"
+      purchase_failed: "&c购买失败，余额不足"
+      
+    member:
+      promoted: "&a你已被提升为 {role}"
+      demoted: "&a你已被降级为 {role}"
+      kicked: "&c你已被踢出公会"
+      promoted_other: "&a{player} 已被提升为 {role}"
+      demoted_other: "&a{player} 已被降级为 {role}"
+      kicked_other: "&a{player} 已被踢出公会"
+      transferred: "&a公会会长已转让给 {player}"
+      muted: "&c你已被禁言 {time}"
+      unmuted: "&a你的禁言已被解除"
+      muted_other: "&a{player} 被禁言 {time}"
+      unmuted_other: "&a{player} 的禁言已被解除"
+      
+    chat:
+      format: "&8[&6公会&8] &f{player}&7: &f{message}"
+      officer_format: "&8[&c管理&8] &f{player}&7: &f{message}"
+      muted: "&c你已被禁言，无法在公会频道发言"
+      
+    gui:
+      no_guild: "&c你还没有公会"
+      no_guild_desc: "&7创建或加入一个公会来开始"
+      create_guild: "&a创建公会"
+      create_guild_desc: "&7点击创建一个新的公会"
+      view_all_guilds: "&e查看所有公会"
+      view_all_guilds_desc: "&7点击查看服务器上的所有公会"
+      back: "&c返回"
+      back_desc: "&7返回主菜单"
+      upgrade_guild: "&a升级公会"
+      upgrade_guild_desc: "&7使用货币升级公会"
+      buy_experience: "&b购买经验"
+      buy_experience_desc: "&7使用货币购买经验"
+      
+    error:
+      command_only_player: "&c此命令只能由玩家执行"
+      invalid_arguments: "&c参数错误"
+      guild_not_found: "&c公会不存在"
+      player_not_in_guild: "&c玩家不在公会中"
+      cannot_leave_as_owner: "&c会长不能离开公会，请先转让会长或解散公会"
+      cannot_kick_higher_role: "&c你不能踢出比你职位高的成员"
+      cannot_promote_higher_role: "&c你不能提升比你职位高的成员"
+      cannot_demote_higher_role: "&c你不能降级比你职位高的成员"
+      cannot_mute_higher_role: "&c你不能禁言其他管理员或会长"
+      cannot_mute_self: "&c你不能禁言自己"
+      player_not_muted: "&c该玩家未被禁言"
+      invalid_time_format: "&c无效的时间格式"
+      time_too_long: "&c时间过长，最长只能为999天"
+      
+    success:
+      tag_set: "&a公会标签已设置为: {tag}"
+      tag_color_set: "&a公会标签颜色已设置为: {color}"
+      motd_set: "&a公会公告已设置为: {motd}"
+      motd_cleared: "&a公会公告已清除"
+      settings_updated: "&a设置已更新"
+      reloaded: "&a配置已重载"
+      database_reloaded: "&a数据库已重载"
+      
+  # 繁体中文
+  zh_tw:
+    guild:
+      created: "&a成功創建公會: {name}"
+      created_with_tag: "&a成功創建公會: {name}&a, 標籤: {tag}"
+      deleted: "&c公會已解散"
+      joined: "&a你已加入公會: {name}"
+      left: "&a你已離開公會"
+      already_in_guild: "&c你已經在公會中了"
+      not_in_guild: "&c你不在任何公會中"
+      no_permission: "&c你沒有權限執行此操作"
+      guild_not_found: "&c未找到公會: {name}"
+      player_not_found: "&c未找到玩家: {name}"
+      name_exists: "&c公會名稱已存在"
+      name_too_short: "&c公會名稱太短，最少需要 {min} 個字符"
+      name_too_long: "&c公會名稱太長，最多 {max} 個字符"
+      tag_too_long: "&c標籤太長，最多 {max} 個字符"
+      not_enough_money: "&c創建公會需要 {cost} 金幣/點數"
+      level_up: "&a公會升級成功！當前等級: {level}"
+      experience_purchased: "&a成功購買 {exp} 經驗"
+      upgrade_failed: "&c升級失敗，餘額不足"
+      purchase_failed: "&c購買失敗，餘額不足"
+      
+    member:
+      promoted: "&a你已被提升為 {role}"
+      demoted: "&a你已被降級為 {role}"
+      kicked: "&c你已被踢出公會"
+      promoted_other: "&a{player} 已被提升為 {role}"
+      demoted_other: "&a{player} 已被降級為 {role}"
+      kicked_other: "&a{player} 已被踢出公會"
+      transferred: "&a公會會長已轉讓給 {player}"
+      muted: "&c你已被禁言 {time}"
+      unmuted: "&a你的禁言已被解除"
+      muted_other: "&a{player} 被禁言 {time}"
+      unmuted_other: "&a{player} 的禁言已被解除"
+      
+    chat:
+      format: "&8[&6公會&8] &f{player}&7: &f{message}"
+      officer_format: "&8[&c管理&8] &f{player}&7: &f{message}"
+      muted: "&c你已被禁言，無法在公會頻道發言"
+      
+    gui:
+      no_guild: "&c你還沒有公會"
+      no_guild_desc: "&7創建或加入一個公會來開始"
+      create_guild: "&a創建公會"
+      create_guild_desc: "&7點擊創建一個新的公會"
+      view_all_guilds: "&e查看所有公會"
+      view_all_guilds_desc: "&7點擊查看服務器上的所有公會"
+      back: "&c返回"
+      back_desc: "&7返回主選單"
+      upgrade_guild: "&a升級公會"
+      upgrade_guild_desc: "&7使用貨幣升級公會"
+      buy_experience: "&b購買經驗"
+      buy_experience_desc: "&7使用貨幣購買經驗"
+      
+    error:
+      command_only_player: "&c此命令只能由玩家執行"
+      invalid_arguments: "&c參數錯誤"
+      guild_not_found: "&c公會不存在"
+      player_not_in_guild: "&c玩家不在公會中"
+      cannot_leave_as_owner: "&c會長不能離開公會，請先轉讓會長或解散公會"
+      cannot_kick_higher_role: "&c你不能踢出比你職位高的成員"
+      cannot_promote_higher_role: "&c你不能提升比你職位高的成員"
+      cannot_demote_higher_role: "&c你不能降級比你職位高的成員"
+      cannot_mute_higher_role: "&c你不能禁言其他管理員或會長"
+      cannot_mute_self: "&c你不能禁言自己"
+      player_not_muted: "&c該玩家未被禁言"
+      invalid_time_format: "&c無效的時間格式"
+      time_too_long: "&c時間過長，最長只能為999天"
+      
+    success:
+      tag_set: "&a公會標籤已設置為: {tag}"
+      tag_color_set: "&a公會標籤顏色已設置為: {color}"
+      motd_set: "&a公會公告已設置為: {motd}"
+      motd_cleared: "&a公會公告已清除"
+      settings_updated: "&a設置已更新"
+      reloaded: "&a配置已重載"
+      database_reloaded: "&a數據庫已重載"
+      
+  # 英语
+  en_us:
+    guild:
+      created: "&aSuccessfully created guild: {name}"
+      created_with_tag: "&aSuccessfully created guild: {name}&a, Tag: {tag}"
+      deleted: "&cGuild has been disbanded"
+      joined: "&aYou have joined guild: {name}"
+      left: "&aYou have left the guild"
+      already_in_guild: "&cYou are already in a guild"
+      not_in_guild: "&cYou are not in any guild"
+      no_permission: "&cYou don't have permission to perform this action"
+      guild_not_found: "&cGuild not found: {name}"
+      player_not_found: "&cPlayer not found: {name}"
+      name_exists: "&cGuild name already exists"
+      name_too_short: "&cGuild name is too short, minimum {min} characters required"
+      name_too_long: "&cGuild name is too long, maximum {max} characters"
+      tag_too_long: "&cTag is too long, maximum {max} characters"
+      not_enough_money: "&cCreating a guild requires {cost} coins/points"
+      level_up: "&aGuild level up successful! Current level: {level}"
+      experience_purchased: "&aSuccessfully purchased {exp} experience"
+      upgrade_failed: "&cUpgrade failed, insufficient balance"
+      purchase_failed: "&cPurchase failed, insufficient balance"
+      
+    member:
+      promoted: "&aYou have been promoted to {role}"
+      demoted: "&aYou have been demoted to {role}"
+      kicked: "&cYou have been kicked from the guild"
+      promoted_other: "&a{player} has been promoted to {role}"
+      demoted_other: "&a{player} has been demoted to {role}"
+      kicked_other: "&a{player} has been kicked from the guild"
+      transferred: "&aGuild ownership has been transferred to {player}"
+      muted: "&cYou have been muted for {time}"
+      unmuted: "&aYour mute has been lifted"
+      muted_other: "&a{player} has been muted for {time}"
+      unmuted_other: "&a{player}'s mute has been lifted"
+      
+    chat:
+      format: "&8[&6Guild&8] &f{player}&7: &f{message}"
+      officer_format: "&8[&cAdmin&8] &f{player}&7: &f{message}"
+      muted: "&cYou are muted and cannot speak in guild chat"
+      
+    gui:
+      no_guild: "&cYou don't have a guild yet"
+      no_guild_desc: "&7Create or join a guild to get started"
+      create_guild: "&aCreate Guild"
+      create_guild_desc: "&7Click to create a new guild"
+      view_all_guilds: "&eView All Guilds"
+      view_all_guilds_desc: "&7Click to view all guilds on the server"
+      back: "&cBack"
+      back_desc: "&7Return to main menu"
+      upgrade_guild: "&aUpgrade Guild"
+      upgrade_guild_desc: "&7Use currency to upgrade guild"
+      buy_experience: "&bBuy Experience"
+      buy_experience_desc: "&7Use currency to buy experience"
+      
+    error:
+      command_only_player: "&cThis command can only be executed by players"
+      invalid_arguments: "&cInvalid arguments"
+      guild_not_found: "&cGuild does not exist"
+      player_not_in_guild: "&cPlayer is not in a guild"
+      cannot_leave_as_owner: "&cGuild owner cannot leave, please transfer ownership or disband the guild first"
+      cannot_kick_higher_role: "&cYou cannot kick members with higher role than you"
+      cannot_promote_higher_role: "&cYou cannot promote members with higher role than you"
+      cannot_demote_higher_role: "&cYou cannot demote members with higher role than you"
+      cannot_mute_higher_role: "&cYou cannot mute other admins or the owner"
+      cannot_mute_self: "&cYou cannot mute yourself"
+      player_not_muted: "&cThe player is not muted"
+      invalid_time_format: "&cInvalid time format"
+      time_too_long: "&cTime is too long, maximum 999 days"
+      
+    success:
+      tag_set: "&aGuild tag has been set to: {tag}"
+      tag_color_set: "&aGuild tag color has been set to: {color}"
+      motd_set: "&aGuild announcement has been set to: {motd}"
+      motd_cleared: "&aGuild announcement has been cleared"
+      settings_updated: "&aSettings have been updated"
+      reloaded: "&aConfiguration has been reloaded"
+      database_reloaded: "&aDatabase has been reloaded"
